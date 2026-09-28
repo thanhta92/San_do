@@ -1,0 +1,1759 @@
+/* ==========================================================================
+   BIỂU ĐỒ CHUYỂN DẠ (PARTOGRAPH) - BỆNH VIỆN MỸ ĐỨC PHÚ NHUẬN
+   Mã số biểu mẫu: MS: TD-03 • MĐPN.028.PS.02.028
+   ========================================================================== */
+
+:root {
+  /* Medical Dashboard Palette */
+  --bg-app: #0f172a;
+  --bg-paper: #ffffff;
+  --bg-toolbar: #1e293b;
+  --border-app: #334155;
+  --border-grid: #475569;
+  --border-chart-black: #000000;
+  --border-chart-subtle: #cbd5e1;
+
+  --text-dark: #0f172a;
+  --text-light: #f8fafc;
+  --text-muted: #64748b;
+
+  --primary: #0284c7;
+  --primary-dark: #0369a1;
+  --primary-light: #38bdf8;
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #0891b2;
+
+  /* Specific Chart Line Colors */
+  --color-alert-line: #ea580c;  /* Màu cam */
+  --color-action-line: #dc2626; /* Màu đỏ */
+  --color-cervix: #000000;      /* Màu đen */
+  --color-descent: #000000;     /* Màu đen */
+  --color-fhr: #000000;         /* Màu đen */
+  --color-pulse: #000000;       /* Màu đen */
+  --color-bp: #000000;          /* Màu đen */
+
+  /* Scaled Grid Dimensions (1 phút = 1px, 60 phút = 60px ≈ 1.59cm) */
+  --px-per-minute: 1px;
+  --w-col: 60px;
+  --header-width: 185px;
+
+  /* Precise Section Row Heights */
+  --h-fhr: 70px;          /* Thu gọn chiều cao phần Tim thai */
+  --h-liquor: 26px;
+  --h-molding: 26px;
+  --h-cervix: 140px;       /* 7 ticks * 20px (4 - 10 cm) */
+  --h-hour: 24px;
+  --h-time: 26px;
+  --h-cnt: 120px;          /* 6 ticks * 20px */
+  --h-oxy: 34px;
+  --h-drugs: 36px;
+  --h-pulse: 52px;         /* Mạch riêng ở trên (tự động co giãn) */
+  --h-bp: 64px;            /* Huyết áp riêng ở dưới (tự động co giãn) */
+  --h-temp: 26px;
+  --h-urine: 66px;         /* 3 subrows * 22px */
+  --h-clinical: 46px;      /* Ghi nhận lâm sàng */
+  --h-nhs: 38px;
+
+  --font-sans: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-light);
+  line-height: 1.4;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top App Toolbar */
+.app-toolbar {
+  background: var(--bg-toolbar);
+  border-bottom: 1px solid var(--border-app);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.toolbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary), #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.25rem;
+}
+
+.brand-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.brand-sub {
+  font-size: 0.76rem;
+  color: #94a3b8;
+}
+
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.user-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.4rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #cbd5e1;
+}
+
+.user-pill strong {
+  color: #38bdf8;
+}
+
+/* Dropdown Menu */
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: #1e293b;
+  border: 1px solid var(--border-app);
+  border-radius: var(--radius-md);
+  min-width: 340px;
+  box-shadow: var(--shadow);
+  display: none;
+  flex-direction: column;
+  z-index: 1200;
+  overflow: hidden;
+}
+
+.dropdown-list.show {
+  display: flex;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.15s ease;
+}
+
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:hover { background: #334155; }
+.dropdown-item strong { display: block; font-size: 0.86rem; color: #f8fafc; }
+.dropdown-item small { font-size: 0.74rem; color: #94a3b8; }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-success { background: var(--success); color: #fff; }
+.btn-success:hover { background: #047857; }
+.btn-outline { background: transparent; border-color: #475569; color: #f8fafc; }
+.btn-outline:hover { background: #334155; border-color: #94a3b8; }
+.btn-ghost { background: transparent; color: #94a3b8; }
+.btn-ghost:hover { background: #334155; color: #f8fafc; }
+.btn-info { background: var(--info); color: #fff; }
+.btn-info:hover { background: #0e7490; }
+.btn-secondary { background: #475569; color: #fff; }
+.btn-secondary:hover { background: #334155; }
+.btn-danger { background: #dc2626; color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; }
+
+/* Main Paper Container */
+.partograph-page-wrapper {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.partograph-paper {
+  background: var(--bg-paper);
+  color: var(--text-dark);
+  width: 100%;
+  max-width: 1960px;
+  min-width: 1280px;
+  padding: 16px 22px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Side-by-side Layout on Screen */
+.partograph-display-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.chart-primary-column {
+  flex: 1 1 auto;
+  min-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Patient Information Sidebar & Observation Form on the Right (Region 2) */
+.patient-sidebar-column {
+  width: 425px;
+  min-width: 425px;
+  max-width: 425px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  padding: 6px 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  overflow-x: hidden;
+}
+
+.patient-sidebar-column.sidebar-collapsed {
+  width: 425px;
+  min-width: 425px;
+  max-width: 425px;
+}
+
+.btn-quick-open-obs {
+  display: none !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #f0f9ff;
+  border: 1.5px dashed var(--primary);
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-quick-open-obs:hover {
+  background: #e0f2fe;
+  border-color: var(--primary-dark);
+}
+
+.sidebar-collapsed .btn-quick-open-obs {
+  display: none !important;
+}
+
+.sidebar-header-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.sidebar-guide-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 0.72rem;
+}
+
+.guide-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.guide-list {
+  padding-left: 1.1rem;
+  color: #475569;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.w-100 { width: 100%; }
+
+/* Hospital Header Block */
+.hospital-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.unit-code {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.unit-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.header-doc-code {
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.chart-main-title {
+  text-align: center;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin: 2px 0 10px 0;
+  color: #000;
+}
+
+/* Patient Information Box (Formatted as structured card in sidebar) */
+.patient-info-box {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  font-size: 0.74rem;
+}
+
+.info-left-box {
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.info-right-box {
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.2;
+}
+
+.info-line label {
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 0.74rem;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 3px;
+  font-weight: normal;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.inline-input {
+  border: none;
+  border-bottom: 1px dotted #555;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #000;
+  padding: 0 2px;
+  outline: none;
+  height: 18px;
+}
+
+.inline-input:focus {
+  border-bottom: 1px solid var(--primary);
+  background: rgba(2, 132, 199, 0.05);
+}
+
+.w-60 { width: 60px; }
+.w-80 { width: 80px; }
+.w-100 { width: 100px; }
+.w-120 { width: 120px; }
+.w-140 { width: 140px; }
+.flex-1 { flex: 1; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* Legend Bar */
+.matrix-legend-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-bottom: none;
+  font-size: 0.76rem;
+  color: #334155;
+}
+
+.legend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-symbol {
+  font-weight: bold;
+}
+
+.sym-cervix { color: var(--color-cervix); font-size: 0.95rem; }
+.sym-descent { color: var(--color-descent); font-size: 0.95rem; }
+.sym-fhr { color: var(--color-fhr); }
+.sym-bp { color: var(--color-bp); }
+.sym-pulse { color: var(--color-pulse); }
+
+.sym-alert {
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  background: var(--color-alert-line);
+}
+
+.sym-action {
+  display: inline-block;
+  width: 18px;
+  height: 3px;
+  background: var(--color-action-line);
+}
+
+/* ==============================================================
+   PARTOGRAPH MATRIX STAGE (FIXED LEFT HEADERS + SCROLLABLE GRID COLUMNS)
+   ============================================================== */
+.partograph-matrix-stage {
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #000000;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* FIXED LEFT HEADER COLUMN - Cố định phần đóng khung xanh */
+.matrix-sticky-header {
+  width: var(--header-width);
+  min-width: var(--header-width);
+  max-width: var(--header-width);
+  flex-shrink: 0;
+  background: #ffffff;
+  border-right: 1.5px solid #000000;
+  user-select: none;
+  z-index: 10;
+}
+
+/* SCROLLABLE GRID CONTAINER (THANH ROLL BẮT ĐẦU TỪ VẠCH NÀY TRỞ ĐI) */
+.matrix-scroll-container {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #ffffff;
+  position: relative;
+  scrollbar-width: auto; /* Chuẩn cho Firefox */
+  scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+/* Custom Scrollbar rõ ràng, dễ kéo cuộn */
+.matrix-scroll-container::-webkit-scrollbar {
+  height: 12px;
+}
+
+.matrix-scroll-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-top: 1px solid #cbd5e1;
+}
+
+.matrix-scroll-container::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 6px;
+  border: 2px solid #f1f5f9;
+}
+
+.matrix-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Generic Section Row in Sticky Header */
+.sec-row {
+  display: flex;
+  border-bottom: 1px solid #000000;
+  position: relative;
+}
+
+.sec-label-full {
+  width: 100%;
+  padding: 0 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.sec-label-full small {
+  font-size: 0.70rem;
+  font-weight: normal;
+  color: #000000;
+}
+
+/* 1. Nhịp tim thai Header */
+.sec-fhr {
+  height: var(--h-fhr);
+}
+
+.sec-fhr .sec-header-title {
+  width: 90px;
+  border-right: 1px solid #000000;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.sec-fhr .sec-header-title.full-header-width {
+  width: 100%;
+  border-right: none;
+  align-items: flex-start;
+  text-align: left;
+  padding: 0 6px;
+}
+
+.sec-fhr .sub-rule {
+  font-size: 0.70rem;
+  font-weight: normal;
+  margin-top: 4px;
+  text-align: left;
+}
+
+.sec-fhr .sec-y-ticks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sec-fhr .tick-label {
+  height: 16px;
+  line-height: 16px;
+  text-align: right;
+  padding-right: 6px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.sec-fhr .tick-label:last-child {
+  border-bottom: none;
+}
+
+/* 2 & 3. Single Rows */
+.sec-single {
+  height: var(--h-liquor);
+}
+
+/* 4. Cổ tử cung & Độ lọt đầu (Bracket & Ticks) */
+.sec-cervix-descent {
+  height: var(--h-cervix);
+}
+
+.sec-header-col-left {
+  width: 58px;
+  border-right: 1px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
+  position: relative;
+  text-align: center;
+}
+
+.descent-title {
+  color: #000000;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sec-header-col-mid {
+  width: 62px;
+  border-right: 1px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2px 4px;
+  position: relative;
+}
+
+.cervix-title {
+  color: #000000;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.sec-y-ticks-cervix {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cervix-tick-row {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.cervix-tick-row:last-child {
+  border-bottom: none;
+}
+
+.cervix-tick-row .t-descent {
+  color: #000000;
+  font-weight: 700;
+}
+
+.cervix-tick-row .t-cervix {
+  color: #000000;
+  font-weight: bold;
+}
+
+/* 5 & 6. Giờ & Thời gian */
+.sec-time-label {
+  height: var(--h-time);
+}
+
+/* 7. Cơn co tử cung */
+.sec-contractions {
+  height: var(--h-cnt);
+}
+
+.sec-contractions .sec-header-title {
+  width: 44px;
+  border-right: 1px solid #000000;
+  padding: 2px 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.sec-contraction-legend {
+  flex: 1;
+  border-right: 1px solid #000000;
+  padding: 4px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.cnt-leg-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.cnt-box {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  max-width: 12px;
+  max-height: 12px;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.box-mild {
+  background: radial-gradient(circle, #000 1px, transparent 1.5px);
+  background-size: 3px 3px;
+}
+
+.box-mod {
+  background: repeating-linear-gradient(45deg, #000, #000 1px, #fff 1px, #fff 4px);
+}
+
+.box-strong {
+  background: #000000;
+}
+
+.sec-y-ticks-cnt {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cnt-tick {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.cnt-tick:last-child {
+  border-bottom: none;
+}
+
+/* 8 & 9. Oxytocin & Thuốc */
+.sec-oxytocin { 
+  height: var(--h-oxy); 
+}
+.sec-oxytocin .sec-label-full {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  white-space: nowrap;
+}
+.sec-oxytocin .t-oxytocin-unit {
+  font-size: 0.72rem;
+  font-weight: normal;
+  color: #000000;
+}
+.sec-drugs { 
+  height: var(--h-drugs); 
+  min-height: var(--h-drugs);
+}
+
+/* 10. Mạch (ở trên) - chiều cao tự động */
+.sec-pulse {
+  min-height: var(--h-pulse);
+  height: var(--h-pulse);
+}
+
+/* 11. Huyết áp (ở dưới) - chiều cao tự động */
+.sec-bp {
+  min-height: var(--h-bp);
+  height: var(--h-bp);
+}
+
+/* BP Header: 2 cột - tiêu đề trái, range indicator phải */
+.sec-bp-header {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 6px;
+  gap: 4px;
+}
+
+.bp-main-title {
+  flex: 1;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.bp-main-title small {
+  font-size: 0.72rem;
+  font-weight: normal;
+  color: #000000;
+}
+
+.bp-range-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 2px 0;
+  min-width: 48px;
+}
+
+.bp-range-sys,
+.bp-range-dia {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #000000;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bp-range-arrow {
+  font-size: 0.95rem;
+  color: #000000;
+  line-height: 1;
+}
+
+/* 12. Thân nhiệt */
+.sec-temp { height: var(--h-temp); }
+
+/* 13. Nước tiểu */
+.sec-urine {
+  height: var(--h-urine);
+}
+
+.sec-urine-title {
+  width: 55px;
+  border-right: 1px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.sec-urine-subrows {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.urine-sub-label {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.urine-sub-label:last-child {
+  border-bottom: none;
+}
+
+/* 14. Ghi nhận lâm sàng */
+.sec-clinical {
+  height: var(--h-clinical);
+  min-height: var(--h-clinical);
+}
+
+/* 15. NHS */
+.sec-nhs {
+  height: var(--h-nhs);
+  border-bottom: none;
+}
+
+/* ==============================================================
+   DYNAMIC TIME-SCALED GRID WRAPPER & COLUMNS
+   ============================================================== */
+.matrix-dynamic-grid-wrapper {
+  position: relative;
+  display: flex;
+  min-height: 100%;
+  width: max-content;
+  flex: none;
+}
+
+/* SVG Lines Overlay */
+.matrix-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 20;
+  overflow: visible;
+}
+
+/* Columns container */
+.matrix-columns-container {
+  display: flex;
+  min-height: 100%;
+  width: max-content;
+  z-index: 10;
+  flex: none;
+}
+
+/* Individual Observation / Timeline Column */
+.time-col {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #000000;
+  position: relative;
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  min-width: 50px;
+}
+
+.time-col:hover {
+  background-color: #e0f2fe; /* Xanh dương nhẹ (light sky blue) */
+}
+
+/* Khi hover vào cột, toàn bộ giá trị chữ/số trong cột đó in đậm lên */
+.time-col:hover .col-cell,
+.time-col:hover .cell-urine-sub,
+.time-col:hover .cell-time,
+.time-col:hover .cell-oxy,
+.time-col:hover .cell-drugs,
+.time-col:hover .cell-clinical,
+.time-col:hover .cell-liquor,
+.time-col:hover .cell-molding,
+.time-col:hover .cell-temp,
+.time-col:hover .cell-nhs {
+  font-weight: 800 !important;
+}
+
+/* SVG text and markers highlight on hover */
+.svg-hover-active {
+  font-weight: 800 !important;
+  stroke-width: 2.2px !important;
+}
+text.svg-hover-active {
+  font-weight: 800 !important;
+  font-size: 11px !important;
+}
+
+.time-col.time-col-disabled {
+  cursor: default;
+  background-color: #ffffff;
+}
+
+.time-col.time-col-disabled:hover {
+  background-color: #ffffff;
+}
+
+.time-col.time-col-next {
+  cursor: pointer;
+}
+
+.time-col.time-col-next:hover {
+  background-color: #e0f2fe;
+}
+
+.time-col.active-col {
+  background-color: #bae6fd;
+}
+
+/* Time-col Subcells matching heights */
+.col-cell {
+  width: 100%;
+  border-bottom: 1px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-size: 11px;
+  color: #000;
+  text-align: center;
+}
+
+.col-cell.cell-fhr { height: var(--h-fhr); }
+.col-cell.cell-liquor { height: var(--h-liquor); font-weight: normal; }
+.col-cell.cell-molding { height: var(--h-molding); font-weight: normal; }
+.col-cell.cell-cervix { height: var(--h-cervix); }
+.col-cell.cell-time { 
+  height: var(--h-time); 
+  font-family: var(--font-mono); 
+  font-weight: 500; 
+  font-size: 11px;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 2px;
+  text-align: left;
+  white-space: nowrap;
+}
+.col-cell.cell-cnt { 
+  height: var(--h-cnt); 
+  align-items: flex-end; 
+  justify-content: flex-start;
+}
+.col-cell.cell-oxy { 
+  height: var(--h-oxy); 
+  font-size: 11px; 
+  font-weight: normal;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+.col-cell.cell-oxy-val {
+  width: 0.5cm;
+  min-width: 0.5cm;
+  max-width: 0.5cm;
+  text-align: center;
+  display: inline-block;
+}
+.col-cell.cell-drugs { 
+  height: var(--h-drugs); 
+  min-height: var(--h-drugs);
+  font-size: 11px; 
+  font-weight: normal;
+  line-height: 1.18;
+  padding: 3px 2px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-break: break-word;
+  overflow: hidden;
+}
+.col-cell.cell-pulse { 
+  height: var(--h-pulse); 
+  min-height: var(--h-pulse);
+}
+.col-cell.cell-bp { 
+  height: var(--h-bp); 
+  min-height: var(--h-bp);
+}
+.col-cell.cell-temp { 
+  height: var(--h-temp); 
+  font-weight: normal; 
+  font-size: 11px;
+  white-space: nowrap;
+}
+.col-cell.cell-urine { height: var(--h-urine); flex-direction: column; }
+.col-cell.cell-clinical { 
+  height: var(--h-clinical); 
+  min-height: var(--h-clinical);
+  font-size: 11px; 
+  font-weight: normal;
+  line-height: 1.18;
+  padding: 3px 2px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-break: break-word;
+  overflow: hidden;
+}
+.col-cell.cell-nhs { 
+  height: var(--h-nhs); 
+  min-height: var(--h-nhs);
+  border-bottom: none; 
+  font-size: 11px; 
+  font-weight: normal; 
+  line-height: 1.18;
+  padding: 3px 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-break: break-word;
+  overflow: hidden;
+}
+
+/* Subcells inside urine */
+.cell-urine-sub {
+  width: 100%;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #cbd5e1;
+  font-weight: normal;
+  font-size: 11px;
+}
+.cell-urine-sub:last-child { border-bottom: none; }
+
+/* Horizontal Subgrid Lines inside Cells */
+.subgrid-line-fhr {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.subgrid-line-cervix {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.subgrid-line-cnt {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.subgrid-line-vitals {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Contraction Column Graphic in Cell - Cố định rộng 0.5cm (20px), căn lề trái của ô */
+.cnt-bar-stack {
+  width: 0.5cm;
+  min-width: 0.5cm;
+  max-width: 0.5cm;
+  margin: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+  z-index: 2;
+}
+
+.cnt-bar-box {
+  width: 0.5cm;
+  height: 20px;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+}
+
+/* Vital Signs Renderings */
+.text-danger-alert {
+  color: var(--danger) !important;
+  font-weight: 800 !important;
+}
+
+.pulse-badge-val {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.bp-badge-val {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+/* Hospital Footer */
+.hospital-footer {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: #475569;
+}
+
+.footer-code {
+  font-family: var(--font-mono);
+  font-weight: bold;
+}
+
+/* ==============================================================
+   MODAL DIALOG & FORMS (REGION 2 INLINE PANEL & HISTORY POPUP)
+   ============================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.modal-backdrop.show {
+  display: flex;
+}
+
+.modal-dialog {
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  width: 100%;
+  max-width: 960px;
+  overflow: hidden;
+  animation: modalScale 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.modal-title-group h3 {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: #64748b;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.btn-close:hover {
+  color: var(--danger);
+}
+
+.modal-body {
+  padding: 1.25rem;
+  max-height: 78vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Observation Entry & Edit Panel (Embedded in Sidebar Region 2 - Không đóng khung) */
+.obs-panel-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.obs-panel-card.active-editing {
+  border: none;
+  box-shadow: none;
+}
+
+.obs-panel-header {
+  background: transparent;
+  border-bottom: none;
+  padding: 4px 0 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.3rem;
+  flex-wrap: nowrap;
+}
+
+.obs-panel-header .modal-title-group h3 {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.obs-panel-header .modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: nowrap;
+  margin-left: auto;
+}
+
+.obs-panel-header .modal-header-actions .btn {
+  padding: 2px 7px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 4px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.obs-panel-body.form-new-layout {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: none;
+  overflow-y: visible;
+  overflow-x: visible;
+}
+
+.obs-panel-body .form-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.obs-panel-body .section-heading-blue {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0284c7;
+  letter-spacing: -0.01em;
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+  line-height: 1.1;
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.form-row-grid {
+  display: grid;
+  gap: 2px 4px;
+}
+
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.form-col-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.form-field label {
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 1px;
+  line-height: 1.1;
+}
+
+.label-with-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-copy-prev {
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-copy-prev:hover {
+  background: #bae6fd;
+}
+
+.form-control {
+  border: 1px solid #cbd5e1;
+  border-radius: 2px;
+  padding: 1px 4px;
+  font-family: inherit;
+  font-size: 0.74rem;
+  color: #0f172a;
+  outline: none;
+  background: #ffffff;
+  height: 22px;
+  width: 100%;
+  line-height: 1;
+}
+
+select.form-control {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 22px;
+  font-size: 0.74rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+}
+
+.input-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.field-hint {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.time-delta-badge {
+  background: #e2e8f0;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.65rem;
+  font-size: 0.78rem;
+  color: #1e293b;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Tooltip */
+.matrix-tooltip {
+  position: absolute;
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 0.76rem;
+  pointer-events: none;
+  z-index: 3000;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Toast */
+.app-toast-box {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 4000;
+}
+
+.app-toast {
+  background: #1e293b;
+  border-left: 4px solid var(--primary);
+  color: #ffffff;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 260px;
+}
+
+/* ==============================================================
+   TREATMENT RECORDS HISTORY LIST MODAL
+   ============================================================== */
+.treatment-search-bar {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.treatment-search-bar i {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.treatment-search-bar input {
+  padding-left: 36px;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px solid #cbd5e1;
+}
+
+.treatment-records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.treatment-record-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.treatment-record-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 3px 12px rgba(2, 132, 199, 0.12);
+  background: #f0f9ff;
+}
+
+.treatment-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.treatment-time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 800;
+  border: 1px solid #bae6fd;
+}
+
+.treatment-examiner-badge {
+  font-size: 0.78rem;
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.treatment-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.5rem;
+  background: #f8fafc;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+}
+
+.treatment-metric-cell strong {
+  color: #0f172a;
+}
+
+.treatment-metric-cell span {
+  color: #64748b;
+}
+
+.treatment-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.treatment-notes-preview {
+  font-size: 0.74rem;
+  color: #64748b;
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60%;
+}
+
+/* ==============================================================
+   PRINT STYLESHEET (A4 PORTRAIT / EXACT HOSPITAL STANDARD)
+   ============================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 6mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .no-print,
+  .app-toolbar,
+  .matrix-legend-bar,
+  .modal-backdrop,
+  .app-toast-box,
+  .sidebar-quick-panel,
+  .sidebar-header-title {
+    display: none !important;
+  }
+
+  .partograph-page-wrapper {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .partograph-paper {
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Reset side-by-side to block flow for print (Patient box on top) */
+  .partograph-display-layout {
+    display: flex !important;
+    flex-direction: column-reverse !important; /* Puts patient sidebar on top */
+    gap: 8px !important;
+  }
+
+  .patient-sidebar-column {
+    width: 100% !important;
+    min-width: 100% !important;
+    position: static !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .patient-info-box {
+    display: grid !important;
+    grid-template-columns: 280px 1fr !important;
+    border: 1px solid #000000 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    margin-bottom: 6px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .info-left-box {
+    border-right: 1px solid #000000 !important;
+    border-bottom: none !important;
+    padding: 4px 8px !important;
+  }
+
+  .info-right-box {
+    padding: 4px 8px !important;
+  }
+
+  .matrix-scroll-container {
+    overflow: visible !important;
+  }
+
+  .matrix-sticky-header {
+    position: static !important;
+  }
+
+  .inline-input {
+    border-bottom: none !important;
+  }
+
+  .time-val-label {
+    border: none !important;
+    padding: 0 !important;
+  }
+}

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biểu Đồ Chuyển Dạ - Bệnh Viện Mỹ Đức Phú Nhuận (MS: TD-03)</title>
+  <meta name="description"
+    content="Phần mềm Biểu đồ chuyển dạ (Partograph) chuẩn Bệnh viện Mỹ Đức Phú Nhuận & Bộ Y tế, lưới ma trận co giãn theo thời gian thực tế.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css?v=2.1">
+</head>
+
+<body>
+  <!-- Top App Navigation & Controls -->
+  <header class="app-toolbar no-print">
+    <div class="toolbar-brand">
+      <div class="brand-badge">
+        <i class="fa-solid fa-notes-medical"></i>
+      </div>
+      <div>
+        <div class="brand-title">BIỂU ĐỒ CHUYỂN DẠ (PARTOGRAPH)</div>
+        <div class="brand-sub">Chuẩn Bệnh viện Mỹ Đức Phú Nhuận • MS: TD-03 • MĐPN.028.PS.02.028</div>
+      </div>
+    </div>
+
+    <div class="toolbar-controls">
+      <!-- User / NHS Logged-in Info -->
+      <div class="user-pill" title="Người dùng đang đăng nhập">
+        <i class="fa-solid fa-user-nurse"></i>
+        <span>NHS: <strong id="currentLoginUser">Lê Thị Hồng (NHS. HỒNG)</strong></span>
+      </div>
+
+      <!-- Presets Demo -->
+      <div class="dropdown-wrapper">
+        <button class="btn btn-outline" id="btnPresetMenu">
+          <i class="fa-solid fa-folder-open"></i> Ca mẫu minh họa <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-list" id="presetDropdownList">
+          <div class="dropdown-item" data-preset="demo_time_gap">
+            <i class="fa-solid fa-clock-rotate-left text-primary"></i>
+            <div>
+              <strong>Minh họa co giãn thời gian (60p & 90p)</strong>
+              <small>09:00 (4cm) -> 10:00 (60p) -> 11:30 (90p) -> 12:30 (60p)</small>
+            </div>
+          </div>
+          <div class="dropdown-item" data-preset="normal">
+            <i class="fa-solid fa-circle-check text-success"></i>
+            <div>
+              <strong>1. Chuyển dạ thường tiến triển tốt</strong>
+              <small>Bắt đầu 4cm tại đường báo động, mở trọn thuận lợi</small>
+            </div>
+          </div>
+          <div class="dropdown-item" data-preset="prolonged">
+            <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+            <div>
+              <strong>2. Chậm tiến triển vượt đường báo động</strong>
+              <small>Gò thưa, đáp ứng truyền tăng co Oxytocin</small>
+            </div>
+          </div>
+          <div class="dropdown-item" data-preset="alert_action">
+            <i class="fa-solid fa-circle-radiation text-danger"></i>
+            <div>
+              <strong>3. Bất tương xứng đầu chậu (Chạm đường hành động)</strong>
+              <small>Ngưng tiến triển 6cm, chồng khớp +++, HCMLT</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <button class="btn btn-success" id="btnPrintPartograph">
+        <i class="fa-solid fa-print"></i> In biểu đồ (MS: TD-03)
+      </button>
+
+      <button class="btn btn-ghost" id="btnResetChart" title="Làm mới">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Printable Sheet Container (Matches MS: TD-03) -->
+  <main class="partograph-page-wrapper">
+    <div class="partograph-paper" id="printableArea">
+
+      <!-- Layout container for side-by-side on screen, single-column for print -->
+      <div class="partograph-display-layout">
+
+        <!-- LEFT: MAIN CHART AREA -->
+        <div class="chart-primary-column">
+
+          <!-- Hospital Header (Only document code MS: TD-03) -->
+          <div class="hospital-header" style="justify-content: flex-end;">
+            <div class="header-doc-code">MS: TD-03</div>
+          </div>
+
+          <h1 class="chart-main-title">BIỂU ĐỒ CHUYỂN DẠ</h1>
+
+          <!-- MAIN PARTOGRAPH MATRIX GRID WITH DYNAMIC TIME SCALE -->
+          <div class="partograph-matrix-stage" id="matrixStage">
+
+            <!-- STICKY LEFT HEADER COLUMN (CỐ ĐỊNH BÊN TRÁI KHÔNG BỊ CUỘN) -->
+            <div class="matrix-sticky-header" id="matrixStickyHeader">
+
+              <!-- Row 1: Nhịp tim thai -->
+              <div class="sec-row sec-fhr">
+                <div class="sec-header-title full-header-width">
+                  <span>Nhịp tim thai</span>
+                  <span class="sub-rule">(lần/phút)</span>
+                </div>
+              </div>
+
+              <!-- Row 2: Nước ối -->
+              <div class="sec-row sec-single">
+                <div class="sec-label-full">Nước ối</div>
+              </div>
+
+              <!-- Row 3: Độ chống khớp / Chồng xương -->
+              <div class="sec-row sec-single">
+                <div class="sec-label-full">Độ chồng khớp</div>
+              </div>
+
+              <!-- Row 4: Cổ tử cung & Độ lọt đầu (Central Matrix) -->
+              <div class="sec-row sec-cervix-descent">
+                <div class="sec-header-col-left">
+                  <div class="descent-title">Độ lọt của đầu<br>(khoanh O)</div>
+                </div>
+                <div class="sec-header-col-mid">
+                  <div class="cervix-title">Cổ tử cung<br>(đánh dấu X)</div>
+                </div>
+                <div class="sec-y-ticks-cervix">
+                  <div class="cervix-tick-row"><span class="t-descent">(-3)</span><span class="t-cervix">10</span>
+                  </div>
+                  <div class="cervix-tick-row"><span class="t-descent">(-2)</span><span class="t-cervix">9</span>
+                  </div>
+                  <div class="cervix-tick-row"><span class="t-descent">(-1)</span><span class="t-cervix">8</span>
+                  </div>
+                  <div class="cervix-tick-row"><span class="t-descent">(0)</span><span class="t-cervix">7</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent">(+1)</span><span class="t-cervix">6</span>
+                  </div>
+                  <div class="cervix-tick-row"><span class="t-descent">(+2)</span><span class="t-cervix">5</span>
+                  </div>
+                  <div class="cervix-tick-row"><span class="t-descent">(+3)</span><span class="t-cervix">4</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 5: Thời gian thực tế -->
+              <div class="sec-row sec-time-label">
+                <div class="sec-label-full">Thời gian</div>
+              </div>
+
+              <!-- Row 7: Số cơn co trong 10 phút -->
+              <div class="sec-row sec-contractions">
+                <div class="sec-header-title">
+                  <span>Số<br>cơn<br>co<br>trong<br>10<br>phút</span>
+                </div>
+                <div class="sec-contraction-legend">
+                  <div class="cnt-leg-row"><span class="cnt-box box-mild"></span> &lt; 20 (s)</div>
+                  <div class="cnt-leg-row"><span class="cnt-box box-mod"></span> 20-40 (s)</div>
+                  <div class="cnt-leg-row"><span class="cnt-box box-strong"></span> &gt; 40 (s)</div>
+                </div>
+                <div class="sec-y-ticks-cnt">
+                  <div class="cnt-tick">6</div>
+                  <div class="cnt-tick">5</div>
+                  <div class="cnt-tick">4</div>
+                  <div class="cnt-tick">3</div>
+                  <div class="cnt-tick">2</div>
+                  <div class="cnt-tick">1</div>
+                </div>
+              </div>
+
+              <!-- Row 8: Oxytocin -->
+              <div class="sec-row sec-oxytocin">
+                <div class="sec-label-full">
+                  <strong>Oxytocin</strong>
+                  <small id="oxytocinHeaderUnit" class="t-oxytocin-unit">(giọt/phút)</small>
+                </div>
+              </div>
+
+              <!-- Row 9: Thuốc đã dùng -->
+              <div class="sec-row sec-drugs">
+                <div class="sec-label-full">Thuốc đã dùng</div>
+              </div>
+
+              <!-- Row 10: Mạch (ở trên) -->
+              <div class="sec-row sec-pulse">
+                <div class="sec-label-full">
+                  <strong>Mạch</strong>
+                  <small>(lần/phút)</small>
+                </div>
+              </div>
+
+              <!-- Row 11: Huyết áp (ở dưới) -->
+              <div class="sec-row sec-bp">
+                <div class="sec-bp-header">
+                  <span class="bp-main-title">Huyết áp <small>(mmHg)</small></span>
+                  <div class="bp-range-indicator">
+                    <span class="bp-range-sys">Tâm thu</span>
+                    <span class="bp-range-arrow">↕</span>
+                    <span class="bp-range-dia">Tâm trương</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 12: Thân nhiệt -->
+              <div class="sec-row sec-single">
+                <div class="sec-label-full">Thân nhiệt (độ C)</div>
+              </div>
+
+              <!-- Row 13: Nước tiểu (đạm, aceton, lượng) -->
+              <div class="sec-row sec-urine">
+                <div class="sec-urine-title">
+                  <span>Nước<br>tiểu</span>
+                </div>
+                <div class="sec-urine-subrows">
+                  <div class="urine-sub-label">Đạm</div>
+                  <div class="urine-sub-label">Aceton (ketone)</div>
+                  <div class="urine-sub-label">Lượng</div>
+                </div>
+              </div>
+
+              <!-- Row 14: Ghi nhận lâm sàng -->
+              <div class="sec-row sec-clinical">
+                <div class="sec-label-full">Ghi nhận lâm sàng</div>
+              </div>
+
+              <!-- Row 15: NHS thực hiện -->
+              <div class="sec-row sec-nhs">
+                <div class="sec-label-full">NHS thực hiện</div>
+              </div>
+
+            </div><!-- /matrix-sticky-header -->
+
+            <!-- SCROLLABLE GRID CONTAINER (THANH ROLL CHỈ NẰM TỪ VẠCH NÀY TRỞ ĐI) -->
+            <div class="matrix-scroll-container" id="matrixScrollContainer">
+
+              <!-- DYNAMIC TIME-SCALED GRID CONTAINER -->
+              <div class="matrix-dynamic-grid-wrapper" id="matrixGridWrapper">
+
+                <!-- SVG Canvas for Lines -->
+                <svg class="matrix-svg-overlay" id="matrixSvgOverlay"></svg>
+
+                <!-- HTML Columns & Cells for Data Rendering and Interactions -->
+                <div class="matrix-columns-container" id="matrixColumnsContainer">
+                  <!-- Rendered dynamically by app.js -->
+                </div>
+
+              </div><!-- /matrix-dynamic-grid-wrapper -->
+
+            </div><!-- /matrix-scroll-container -->
+
+          </div><!-- /partograph-matrix-stage -->
+
+          <!-- Footer Sign / Form Code -->
+          <div class="hospital-footer">
+            <div class="footer-code">MĐPN.028.PS.02.028</div>
+          </div>
+
+        </div><!-- /chart-primary-column -->
+
+        <!-- RIGHT: PATIENT INFORMATION SIDEBAR (NẰM BÊN PHẢI BIỂU ĐỒ) -->
+        <aside class="patient-sidebar-column" id="patientSidebarCol">
+          <div class="sidebar-header-title">
+            <i class="fa-solid fa-address-card text-primary"></i>
+            <span>Thông tin sản phụ & Bệnh án</span>
+          </div>
+
+          <!-- Patient Information Fields (Matches MS: TD-03) -->
+          <div class="patient-info-box" id="patientInfoBox">
+            <div class="info-right-box">
+              <div class="info-line">
+                <label>Para:</label>
+                <input type="text" id="patientParaInput" class="inline-input flex-1" value="0000 (Con so)">
+              </div>
+              <div class="info-line">
+                <label>Chẩn đoán:</label>
+                <input type="text" id="patientDiagInput" class="inline-input flex-1"
+                  value="Thai 39 tuần 2 ngày chuyển dạ hoạt động">
+              </div>
+              <div class="info-line flex-wrap">
+                <label>Ngày giờ nhập viện:</label>
+                <input type="text" id="patientAdmitTimeInput" class="inline-input w-60" value="06:00">
+                <span>, ngày</span>
+                <input type="text" id="patientAdmitDateInput" class="inline-input w-100" value="22/09/2026">
+              </div>
+              <div class="info-line">
+                <label>Ngày ghi biểu đồ:</label>
+                <input type="text" id="patientChartDateInput" class="inline-input w-100" value="22/09/2026">
+              </div>
+              <div class="info-line">
+                <label class="checkbox-label"><input type="checkbox" id="chkIntactMembrane"> Ối còn</label>
+                <span style="margin: 0 4px; color: #cbd5e1;">|</span>
+                <label class="checkbox-label"><input type="checkbox" id="chkRupturedMembrane" checked> Ối đã vỡ lúc:</label>
+                <input type="text" id="patientRuptureTimeInput" class="inline-input w-60" value="07:30">
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Open Button when Form is Closed (Hidden) -->
+          <button type="button" class="btn-quick-open-obs no-print" id="btnQuickOpenObs" style="display: none !important;">
+            <i class="fa-solid fa-circle-plus"></i> Mở form nhập mốc theo dõi
+          </button>
+
+          <!-- ============================================================== -->
+          <!-- REGION 2: ADD / EDIT CLINICAL OBSERVATION POINT PANEL          -->
+          <!-- ============================================================== -->
+          <div class="obs-panel-card no-print" id="obsModal">
+            <div class="obs-panel-header">
+              <div class="modal-title-group" style="display:none;">
+                <i class="fa-solid fa-stethoscope text-primary"></i>
+                <h3 id="modalObsTitle">Thêm mốc theo dõi chuyển dạ mới</h3>
+              </div>
+              <div class="modal-header-actions">
+                <button type="button" class="btn btn-sm btn-primary" id="btnLoadTreatmentRecord"
+                  title="Load dữ liệu kết quả khám từ Tờ chăm sóc">
+                  <i class="fa-solid fa-cloud-arrow-down"></i> Link từ tờ chăm sóc
+                </button>
+                <button type="button" class="btn btn-sm btn-primary" id="btnSaveObservation">
+                  <i class="fa-solid fa-floppy-disk"></i> Lưu
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" id="btnCancelModal">Hủy</button>
+                <button type="button" class="btn btn-sm btn-danger" id="btnDeleteObservation"
+                  title="Xóa toàn bộ dữ liệu mốc này" style="display:none;">
+                  <i class="fa-solid fa-trash"></i> Xóa
+                </button>
+                <button type="button" class="btn-close" id="btnCloseObsModal" title="Làm mới form">&times;</button>
+              </div>
+            </div>
+
+            <form id="obsForm" class="obs-panel-body form-new-layout">
+              <input type="hidden" id="editObsId" value="">
+              <input type="hidden" id="inputLaborHour" value="0">
+              <input type="hidden" id="inputPosition" value="">
+              <input type="hidden" id="inputCaput" value="0">
+              <input type="hidden" id="inputAsynclitism" value="0">
+              <input type="hidden" id="inputLiquorCustom" value="">
+              <input type="hidden" id="inputBpSys" value="">
+              <input type="hidden" id="inputBpDia" value="">
+
+              <!-- Section 1: Thăm khám -->
+              <div class="form-section-block">
+                <div class="section-heading-blue">1. Thăm khám</div>
+                <div class="form-row-grid grid-2">
+                  <!-- Cột trái: Giờ khám, Ngày khám -->
+                  <div class="form-col-group">
+                    <div class="form-field">
+                      <label for="inputObsTime">Giờ khám</label>
+                      <input type="text" id="inputObsTime" class="form-control font-mono font-bold"
+                        placeholder="HH:mm (VD: 23:59)" maxlength="5" autocomplete="off" required>
+                    </div>
+                    <div class="form-field">
+                      <label for="inputObsDate">Ngày khám</label>
+                      <input type="text" id="inputObsDate" class="form-control font-mono font-bold"
+                        placeholder="dd/MM/yyyy (VD: 12/10/2026)" maxlength="10" autocomplete="off" required>
+                    </div>
+                  </div>
+                  <!-- Cột phải: Người đánh giá, Lâm sàng -->
+                  <div class="form-col-group">
+                    <div class="form-field">
+                      <label for="inputNHSName">Người đánh giá</label>
+                      <input type="text" id="inputNHSName" class="form-control" value="NHS. LÊ THỊ HỒNG"
+                        placeholder="Người đánh giá">
+                    </div>
+                    <div class="form-field">
+                      <label for="inputClinicalNote">Lâm sàng</label>
+                      <input type="text" id="inputClinicalNote" class="form-control" placeholder="Lâm sàng...">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section 2: Thai -->
+              <div class="form-section-block">
+                <div class="section-heading-blue">2. Thai</div>
+                <div class="form-row-grid grid-2">
+                  <!-- Cột trái: Tim thai, Số cơn gò/10 phút, Thời gian gò (giây) -->
+                  <div class="form-col-group">
+                    <div class="form-field">
+                      <label for="inputFHR">Tim thai</label>
+                      <input type="text" inputmode="numeric" id="inputFHR" class="form-control font-mono" maxlength="3" placeholder="0 - 250" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                      <label for="inputContractionCount">Số cơn gò/10 phút</label>
+                      <input type="text" inputmode="numeric" id="inputContractionCount" class="form-control font-mono" maxlength="1" placeholder="1 - 6" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                      <label for="inputContractionDur">Thời gian gò (giây)</label>
+                      <select id="inputContractionDur" class="form-control">
+                        <option value="">-- Chọn --</option>
+                        <option value="mild">&lt; 20 (s)</option>
+                        <option value="moderate">20 - 40 (s)</option>
+                        <option value="strong">&gt; 40 (s)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Cột phải: Mở CTC (cm), Độ lọt, Chồng khớp, Tình trạng ối -->
+                  <div class="form-col-group">
+                    <div class="form-field">
+                      <label for="inputDilation">Mở CTC (cm)</label>
+                      <input type="text" inputmode="decimal" id="inputDilation" class="form-control font-mono" maxlength="4"
+                        placeholder="4.0 - 10.5 (VD: 4.5)" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                      <label for="inputDescent">Độ lọt</label>
+                      <select id="inputDescent" class="form-control">
+                        <option value="">-- Chọn --</option>
+                        <option value="-3">-3</option>
+                        <option value="-2">-2</option>
+                        <option value="-1">-1</option>
+                        <option value="0">0</option>
+                        <option value="1">+1</option>
+                        <option value="2">+2</option>
+                        <option value="3">+3</option>
+                      </select>
+                    </div>
+                    <div class="form-field">
+                      <label for="inputMolding">Chồng khớp</label>
+                      <select id="inputMolding" class="form-control">
+                        <option value="">-- Chọn --</option>
+                        <option value="0">0</option>
+                        <option value="+">+</option>
+                        <option value="++">++</option>
+                        <option value="+++">+++</option>
+                      </select>
+                    </div>
+                    <div class="form-field">
+                      <label for="inputLiquor">Tình trạng ối</label>
+                      <select id="inputLiquor" class="form-control">
+                        <option value="">-- Chọn --</option>
+                        <option value="C">C - Còn</option>
+                        <option value="TĐ">TĐ - Trắng đục</option>
+                        <option value="TT">TT - Trắng trong</option>
+                        <option value="X">X - Xanh</option>
+                        <option value="V">V - Vàng</option>
+                        <option value="Đ">Đ - Đỏ</option>
+                        <option value="K">K - Không rõ</option>
+                        <option value="↓">↓ - Ối vỡ / Bấm ối</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section 3: Sản phụ -->
+              <div class="form-section-block">
+                <div class="section-heading-blue">3. Sản phụ</div>
+                <div class="form-row-grid grid-2">
+                  <!-- Cột trái: Mạch, Huyết áp, Nhiệt độ -->
+                  <div class="form-col-group">
+                    <div class="form-field">
+                      <label for="inputPulse">Mạch</label>
+                      <input type="text" inputmode="numeric" id="inputPulse" class="form-control font-mono" maxlength="3" placeholder="0 - 250" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                      <label for="inputBpCombined">Huyết áp</label>
+                      <input type="text" inputmode="numeric" id="inputBpCombined" class="form-control font-mono" maxlength="7" placeholder="120/80" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                      <label for="inputTemp">Nhiệt độ</label>
+                      <input type="text" inputmode="decimal" id="inputTemp" class="form-control font-mono" maxlength="4" placeholder="34.0 - 45.0 (VD: 37.8)" autocomplete="off">
+                    </div>
+                  </div>
+                  <!-- Cột phải: Thể tích nước tiểu (ml), Đạm niệu, Keton niệu -->
+                  <div class="form-col-group">
+                    <div class="form-field">
+                      <label for="inputUrineVolume">Thể tích nước tiểu (ml)</label>
+                      <input type="text" inputmode="numeric" id="inputUrineVolume" class="form-control font-mono" maxlength="4" placeholder="0 - 2000" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                      <label for="inputUrineProtein">Đạm niệu</label>
+                      <select id="inputUrineProtein" class="form-control">
+                        <option value="">-- Chọn --</option>
+                        <option value="-">-</option>
+                        <option value="+">+</option>
+                      </select>
+                    </div>
+                    <div class="form-field">
+                      <label for="inputUrineAcetone">Keton niệu</label>
+                      <select id="inputUrineAcetone" class="form-control">
+                        <option value="">-- Chọn --</option>
+                        <option value="-">-</option>
+                        <option value="+">+</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section 4: Sử dụng thuốc -->
+              <div class="form-section-block">
+                <div class="section-heading-blue">4. Sử dụng thuốc</div>
+                <div class="form-row-grid grid-2">
+                  <div class="form-field">
+                    <label for="inputOxytocinVal">Oxytocin (chọn đơn vị)</label>
+                    <div class="input-group">
+                      <input type="text" inputmode="decimal" id="inputOxytocinVal" class="form-control font-mono" maxlength="5"
+                        placeholder="0 - 20.0 (VD: 3.45)">
+                      <select id="inputOxytocinUnit" class="form-control" style="width: 82px; flex-shrink: 0;">
+                        <option value="giọt/phút">giọt/phút</option>
+                        <option value="ml/giờ">ml/giờ</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-field">
+                    <label for="inputDrugs">Thuốc đã dùng</label>
+                    <input type="text" id="inputDrugs" class="form-control" placeholder="Tên thuốc / dịch truyền...">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </aside><!-- /patient-sidebar-column -->
+
+      </div><!-- /partograph-display-layout -->
+
+    </div><!-- /printableArea -->
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: DANH SÁCH LỊCH SỬ TỜ ĐIỀU TRỊ / LẦN KHÁM ĐÃ NHẬP      -->
+  <!-- ============================================================== -->
+  <div class="modal-backdrop" id="treatmentRecordsModal" style="z-index: 2100;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <i class="fa-solid fa-file-medical text-primary"></i>
+            <div>
+              <h3>Lịch sử khám & Tờ điều trị (Hồ sơ bệnh án điện tử)</h3>
+              <small class="text-muted">Chọn một phiếu khám bên dưới để tự động nạp các chỉ số vào biểu đồ chuyển
+                dạ</small>
+            </div>
+          </div>
+          <button type="button" class="btn-close" id="btnCloseTreatmentModal">&times;</button>
+        </div>
+
+        <div class="modal-body" style="padding: 1rem 1.25rem;">
+          <!-- Filter / Search bar -->
+          <div class="treatment-search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchTreatmentInput" class="form-control"
+              placeholder="Tìm theo giờ khám, bác sĩ hoặc chỉ số...">
+          </div>
+
+          <!-- Treatment Records List Container -->
+          <div class="treatment-records-list" id="treatmentRecordsList">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btnCancelTreatmentModal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tooltip & Toast Containers -->
+  <div class="matrix-tooltip" id="matrixTooltip"></div>
+  <div class="app-toast-box" id="appToastBox"></div>
+
+  <script src="app.js?v=2.1"></script>
+</body>
+
+</html>
