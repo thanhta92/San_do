@@ -1439,21 +1439,29 @@ text.svg-hover-active {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 1px;
 }
 
 .btn-copy-prev {
-  background: #e0f2fe;
+  background: #f0f9ff;
   border: 1px solid #bae6fd;
-  color: #0369a1;
-  border-radius: var(--radius-sm);
-  padding: 1px 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  color: #0284c7;
+  border-radius: 3px;
+  padding: 0 4px;
+  font-size: 0.64rem;
+  height: 15px;
+  line-height: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .btn-copy-prev:hover {
-  background: #bae6fd;
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
 }
 
 .form-control {

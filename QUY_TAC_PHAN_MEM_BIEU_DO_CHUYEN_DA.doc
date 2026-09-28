@@ -1,0 +1,326 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>ĐẶC TẢ YÊU CẦU & QUY TẮC NGHIỆP VỤ PHẦN MỀM BIỂU ĐỒ CHUYỂN DẠ (PARTOGRAPH)</title>
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+  body {
+    font-family: 'Times New Roman', 'Arial', sans-serif;
+    font-size: 13pt;
+    line-height: 1.4;
+    color: #111827;
+    margin: 20mm 20mm;
+  }
+  h1 {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #0369a1;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13pt;
+    font-style: italic;
+    color: #4b5563;
+    margin-bottom: 25px;
+  }
+  h2 {
+    font-size: 15pt;
+    font-weight: bold;
+    color: #0f172a;
+    border-bottom: 2px solid #0284c7;
+    padding-bottom: 4px;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  h3 {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #0369a1;
+    margin-top: 15px;
+    margin-bottom: 6px;
+  }
+  p, li {
+    font-size: 12.5pt;
+    text-align: justify;
+    margin-bottom: 6px;
+  }
+  ul, ol {
+    margin-top: 4px;
+    margin-bottom: 10px;
+    padding-left: 25px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px 0;
+    font-size: 11.5pt;
+  }
+  th, td {
+    border: 1px solid #94a3b8;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: bold;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 6px;
+    font-weight: bold;
+    border-radius: 3px;
+  }
+  .highlight-box {
+    background-color: #f0f9ff;
+    border-left: 4px solid #0284c7;
+    padding: 10px 14px;
+    margin: 12px 0;
+  }
+  .warning-box {
+    background-color: #fef2f2;
+    border-left: 4px solid #dc2626;
+    padding: 10px 14px;
+    margin: 12px 0;
+  }
+  .footer-note {
+    font-size: 10pt;
+    color: #64748b;
+    border-top: 1px solid #cbd5e1;
+    padding-top: 8px;
+    margin-top: 30px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>TÀI LIỆU ĐẶC TẢ KỸ THUẬT & QUY TẮC NGHIỆP VỤ<br>PHẦN MỀM BIỂU ĐỒ CHUYỂN DẠ (PARTOGRAPH)</h1>
+<div class="subtitle">Tiêu chuẩn Biểu mẫu: MS: TD-03 • MĐPN.028.PS.02.028 • Bệnh viện Mỹ Đức Phú Nhuận & Bộ Y Tế</div>
+
+<div class="highlight-box">
+<strong>Mục đích tài liệu:</strong> Tài liệu này tổng hợp toàn bộ quy tắc nghiệp vụ, cấu trúc dữ liệu, thuật toán co giãn thời gian thực, quy định giới hạn nhập liệu và cơ chế hiển thị đồ thị của hệ thống Phần mềm Biểu đồ chuyển dạ (Partograph).
+</div>
+
+<h2>1. TỔNG QUAN HỆ THỐNG & TIÊU CHUẨN Y TẾ</h2>
+<p>Biểu đồ chuyển dạ (Partograph) là công cụ theo dõi diễn tiến chuyển dạ của sản phụ trong pha hoạt động (cổ tử cung mở từ 4cm trở lên), giúp phát hiện sớm các dấu hiệu bất thường như chuyển dạ kéo dài, bất tương xứng đầu chậu, suy thai và các tai biến sản khoa để xử trí kịp thời.</p>
+<ul>
+  <li><strong>Mã số biểu mẫu:</strong> MS: TD-03 (MĐPN.028.PS.02.028).</li>
+  <li><strong>Đối tượng áp dụng:</strong> Bác sĩ sản khoa, Nữ hộ sinh (NHS) theo dõi chuyển dạ tại phòng sinh.</li>
+  <li><strong>Chế độ hoạt động:</strong> Theo dõi động theo thời gian thực (Time-scaled matrix grid) trên nền tảng Web và hỗ trợ in ấn A4 chuẩn hồ sơ bệnh án.</li>
+</ul>
+
+<h2>2. QUY CHUẨN TỶ LỆ LƯỚI MA TRẬN & CO GIÃN THỜI GIAN THỰC</h2>
+
+<h3>2.1. Tỷ lệ trục thời gian (Time-scaled Dynamic Grid)</h3>
+<ul>
+  <li><strong>Tỷ lệ chuẩn:</strong> <code>1 phút = 1px</code>.</li>
+  <li><strong>Khoảng cách chuẩn 60 phút:</strong> <code>60px</code> (quy đổi theo chuẩn in ấn & màn hình 96 DPI: 60px / 37.8px/cm ≈ <strong>1.59 cm</strong>).</li>
+  <li><strong>Khoảng cách tối thiểu giữa 2 mốc (Min Width):</strong> <code>50px</code> (đảm bảo chữ, số và ký hiệu không bị bóp nghẹt khi 2 mốc khám sát nhau ≤ 30 phút).</li>
+  <li><strong>Co giãn động theo thời gian thực:</strong> Chiều rộng cột giữa mốc $i$ và mốc $i+1$ được tính bằng: 
+    <br><code>Độ rộng cột = MAX(50px, (Thời gian mốc i+1 - Thời gian mốc i) × 1px)</code>
+  </li>
+  <li><strong>Quy tắc cột mốc cuối cùng (Last Observation Column):</strong> Mốc khám mới nhất (cuối cùng) được tự động tạo độ rộng gấp đôi cột chuẩn (<code>x2 = 120px</code>) để hiển thị đầy đủ, thoáng đãng các thông tin văn bản dài do phía sau chưa có mốc khám kế tiếp.</li>
+  <li><strong>Khung lưới tối thiểu:</strong> Hiển thị tối thiểu 10 cột chuẩn (600px) bao quát trọn vẹn đường Báo Động và Hành Động.</li>
+</ul>
+
+<h3>2.2. Cơ chế tự động mở rộng chiều cao hàng văn bản đa dòng (Dynamic Row-Height)</h3>
+<p>Đối với 3 hàng có nội dung văn bản dài (<em>Thuốc đã dùng</em>, <em>Ghi nhận lâm sàng</em>, <em>NHS thực hiện</em>), hệ thống tự động đo lường chiều cao cuộn thực tế (<code>scrollHeight</code> và <code>offsetHeight</code>) trên toàn bộ các cột và tự động mở rộng chiều cao hàng (thông qua các biến CSS <code>--h-drugs</code>, <code>--h-clinical</code>, <code>--h-nhs</code>) để hiển thị trọn vẹn 100% nội dung, tuyệt đối không bị che khuất hay cắt bớt chữ.</p>
+
+<h2>3. QUY ĐỊNH RÀNG BUỘC & KIỂM SOÁT NHẬP LIỆU (DATA VALIDATION & MASKING)</h2>
+<p>Toàn bộ các ô nhập liệu số được thiết lập chế độ kiểm soát tức thì (Realtime Masking & Clamping), chặn tối đa số lượng ký tự cho phép ngay khi gõ và tự động đưa về giá trị trần/sàn mà không cần chờ người dùng click chuột ra ngoài (blur):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 20%;">Chỉ số / Trường</th>
+      <th style="width: 15%;">Định dạng & Kiểu</th>
+      <th style="width: 15%;">Giới hạn (Min - Max)</th>
+      <th style="width: 12%;">Độ dài tối đa</th>
+      <th style="width: 38%;">Quy tắc tự động format & Kiểm soát thời gian thực</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Giờ khám</strong><br>(<code>inputObsTime</code>)</td>
+      <td>Thời gian 24 giờ<br>(<code>HH:mm</code>)</td>
+      <td>00:00 - 23:59</td>
+      <td>5 ký tự</td>
+      <td>Gõ 4 số (vd <code>2359</code>) tự động chuyển <code>23:59</code>. Giờ: 00-23, Phút: 00-59. Chặn mọi ký tự chữ cái.</td>
+    </tr>
+    <tr>
+      <td><strong>Ngày khám</strong><br>(<code>inputObsDate</code>)</td>
+      <td>Ngày tháng năm<br>(<code>dd/MM/yyyy</code>)</td>
+      <td>2026 - 2099</td>
+      <td>10 ký tự</td>
+      <td>Gõ 8 số (vd <code>12102026</code>) tự động chuyển <code>12/10/2026</code>. Tự kiểm tra số ngày theo tháng (28/29/30/31 ngày, tự nhận biết năm nhuận).</td>
+    </tr>
+    <tr>
+      <td><strong>Tim thai</strong><br>(<code>inputFHR</code>)</td>
+      <td>Số nguyên</td>
+      <td>0 - 250 bpm</td>
+      <td>3 chữ số</td>
+      <td>Chỉ cho phép gõ tối đa 3 chữ số. Nếu giá trị > 250 sẽ tự động clamp ngay thành <code>250</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Mở CTC</strong><br>(<code>inputDilation</code>)</td>
+      <td>Số thập phân (làm tròn 0.5)</td>
+      <td>4.0 - 10.5 cm</td>
+      <td>4 ký tự</td>
+      <td>Gõ <code>4</code> hiểu <code>4.0</code>; gõ <code>45</code> hiểu <code>4.5</code>; gõ <code>10</code> hiểu <code>10.0</code>; gõ <code>105</code> hiểu <code>10.5</code>. Chặn > 10.5.</td>
+    </tr>
+    <tr>
+      <td><strong>Số cơn gò / 10 phút</strong><br>(<code>inputContractionCount</code>)</td>
+      <td>Số nguyên</td>
+      <td>1 - 6 cơn</td>
+      <td>1 chữ số</td>
+      <td>Chỉ nhận đúng 1 chữ số trong khoảng từ 1 đến 6. Gõ <code>0</code> $\rightarrow$ <code>1</code>; gõ <code>7, 8, 9</code> $\rightarrow$ <code>6</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Thời gian gò</strong><br>(<code>inputContractionDur</code>)</td>
+      <td>Dropdown chọn</td>
+      <td>3 mức thời lượng</td>
+      <td>-</td>
+      <td>Gồm 3 lựa chọn chuẩn: <code>&lt; 20 (s)</code> (nhẹ), <code>20 - 40 (s)</code> (vừa), <code>&gt; 40 (s)</code> (mạnh).</td>
+    </tr>
+    <tr>
+      <td><strong>Độ lọt ngôi thai</strong><br>(<code>inputDescent</code>)</td>
+      <td>Dropdown chọn</td>
+      <td>-3 đến +3</td>
+      <td>-</td>
+      <td>Gồm 7 mức độ: <code>-3</code>, <code>-2</code>, <code>-1</code>, <code>0</code>, <code>+1</code>, <code>+2</code>, <code>+3</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Chồng khớp sọ</strong><br>(<code>inputMolding</code>)</td>
+      <td>Dropdown chọn</td>
+      <td>4 mức độ</td>
+      <td>-</td>
+      <td>Gồm 4 mức: <code>0</code> (khớp bình thường), <code>+</code> (chạm xương), <code>++</code> (chồng xương tách được), <code>+++</code> (chồng xương không tách được).</td>
+    </tr>
+    <tr>
+      <td><strong>Tình trạng ối</strong><br>(<code>inputLiquor</code>)</td>
+      <td>Dropdown mô tả $\rightarrow$ Ký hiệu</td>
+      <td>8 trạng thái</td>
+      <td>-</td>
+      <td>
+        Menu nhập hiển thị đầy đủ, trên biểu đồ hiển thị ký hiệu viết tắt:
+        <br>• <code>C</code> - Còn | • <code>TĐ</code> - Trắng đục | • <code>TT</code> - Trắng trong
+        <br>• <code>X</code> - Xanh | • <code>V</code> - Vàng | • <code>Đ</code> - Đỏ
+        <br>• <code>K</code> - Không rõ | • <code>↓</code> - Ối vỡ / Bấm ối
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Mạch</strong><br>(<code>inputPulse</code>)</td>
+      <td>Số nguyên</td>
+      <td>0 - 250 lần/phút</td>
+      <td>3 chữ số</td>
+      <td>Tối đa 3 chữ số, clamp tối đa 250. Cảnh báo đỏ khi $\ge 100$ hoặc $&lt; 60$ lần/phút.</td>
+    </tr>
+    <tr>
+      <td><strong>Huyết áp</strong><br>(<code>inputBpCombined</code>)</td>
+      <td>Tâm thu / Tâm trương</td>
+      <td>0 - 250 mmHg</td>
+      <td>7 ký tự</td>
+      <td>Gõ liền 5-6 số tự tách dấu gạch chéo (vd: <code>12080</code> $\rightarrow$ <code>120/80</code>). Cảnh báo đỏ khi Tâm thu $\ge 140$ hoặc Tâm trương $\ge 90$ / $&lt; 60$.</td>
+    </tr>
+    <tr>
+      <td><strong>Thân nhiệt</strong><br>(<code>inputTemp</code>)</td>
+      <td>Số thập phân 1 số lẻ</td>
+      <td>34.0 - 45.0 °C</td>
+      <td>4 ký tự</td>
+      <td>Gõ <code>378</code> $\rightarrow$ <code>37.8</code>. Cảnh báo bất thường khi $\ge 38.0^\circ\text{C}$ hoặc $&lt; 36.0^\circ\text{C}$.</td>
+    </tr>
+    <tr>
+      <td><strong>Nước tiểu: Lượng</strong><br>(<code>inputUrineVolume</code>)</td>
+      <td>Số nguyên</td>
+      <td>0 - 2000 ml</td>
+      <td>4 chữ số</td>
+      <td>Tối đa 4 chữ số, tự giới hạn tối đa 2000 ml.</td>
+    </tr>
+    <tr>
+      <td><strong>Nước tiểu: Đạm / Ceton</strong></td>
+      <td>Dropdown chọn</td>
+      <td>-, +</td>
+      <td>-</td>
+      <td>Gồm 2 lựa chọn: <code>-</code> (Âm tính), <code>+</code> (Dương tính - cảnh báo đỏ).</td>
+    </tr>
+    <tr>
+      <td><strong>Oxytocin</strong><br>(<code>inputOxytocinVal</code>)</td>
+      <td>Số thập phân hoặc chữ</td>
+      <td>0 - 20.0</td>
+      <td>5 ký tự</td>
+      <td>Gõ <code>345</code> $\rightarrow$ <code>3.45</code>, gõ <code>125</code> $\rightarrow$ <code>12.5</code>. Tự giới hạn trần 20.0 (chấp nhận chữ như "Ngưng"). Đơn vị chọn: <em>giọt/phút</em> hoặc <em>ml/giờ</em> (đồng bộ toàn bộ ca).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. QUY TẮC VẼ ĐỒ THỊ & CẢNH BÁO LÂM SÀNG (SVG OVERLAY)</h2>
+
+<h3>4.1. Đường Báo Động (Alert Line) & Đường Hành Động (Action Line)</h3>
+<ul>
+  <li><strong>Đường Báo Động (Alert Line):</strong>
+    <br>• Điểm bắt đầu: Tại mốc khám đầu tiên có CTC $\ge 4\text{cm}$ (pha hoạt động), tọa độ Y ứng với vạch 4cm.
+    <br>• Độ dốc chuẩn: $1\text{cm / giờ}$ trong 6 giờ $\rightarrow$ Điểm kết thúc: sau 6 giờ (360px), tại vạch 10cm.
+    <br>• Cảnh báo: Nếu đường biểu diễn độ mở CTC nằm lệch về phía bên phải đường Báo Động, đường Báo Động tự động chuyển sang màu đỏ rực (<code>#dc2626</code>) để cảnh báo chuyển dạ chậm tiến triển.
+  </li>
+  <li><strong>Đường Hành Động (Action Line):</strong>
+    <br>• Điểm bắt đầu: Song song và nằm cách đường Báo Động <strong>4 giờ</strong> (240px) về bên phải.
+    <br>• Cảnh báo khẩn cấp: Nếu đường mở CTC chạm hoặc vượt qua đường Hành Động, đường Hành Động chuyển sang màu đỏ rực (<code>#dc2626</code>), báo hiệu chỉ định can thiệp cấp cứu (hội chẩn mổ lấy thai hoặc tăng co).
+  </li>
+</ul>
+
+<h3>4.2. Các đường biểu diễn sinh hiệu & tiến triển thai</h3>
+<ul>
+  <li><strong>Độ mở cổ tử cung:</strong> Ký hiệu dấu <code>X</code> màu đen, nối bằng nét liền màu đen (<code>stroke-width: 1.2px</code>).</li>
+  <li><strong>Độ lọt ngôi thai:</strong> Ký hiệu vòng tròn <code>O</code> màu đen, nối bằng nét đứt màu đen (<code>stroke-dasharray: 4 3</code>).</li>
+  <li><strong>Nhịp tim thai (FHR):</strong> Ký hiệu chấm tròn đen <code>●</code> kèm chỉ số số học phía trên. Nếu tim thai bất thường ($&lt; 110$ hoặc $&gt; 160\text{ bpm}$), chấm tròn và số tự chuyển sang màu đỏ.</li>
+  <li><strong>Cơn co tử cung:</strong> Xếp chồng các khối màu từ đáy lên (1 đến 6 khối), tô màu theo cường độ:
+    <br>• Dưới 20 giây (nhẹ): Khối có sọc chéo mờ.
+    <br>• 20 - 40 giây (vừa): Khối sọc caro vừa.
+    <br>• Trên 40 giây (mạnh): Khối tô màu đen đậm đặc hoàn toàn.
+  </li>
+  <li><strong>Mạch sản phụ:</strong> Ký hiệu chấm tròn <code>●</code> tại vùng biểu đồ Mạch (50 - 140 l/p), nối liền nét.</li>
+  <li><strong>Huyết áp:</strong> Ký hiệu mũi tên 2 đầu <code>▲—▼</code> nối giữa huyết áp tâm thu và tâm trương, kèm 2 số đo ở 2 đầu.</li>
+</ul>
+
+<h2>5. QUY TRÌNH & TRẢI NGHIỆM NGƯỜI DÙNG (UX / WORKFLOW)</h2>
+<ol>
+  <li><strong>Mở form nhập liệu:</strong>
+    <br>• Hệ thống luôn tự động điền sẵn Ngày khám hiện tại, Giờ khám hiện tại (24h), Tên NHS đăng nhập và đơn vị Oxytocin của lần khám trước.
+    <br>• Người dùng có thể bấm vào bất kỳ cột nào trên biểu đồ để xem/sửa mốc đó, hoặc bấm vào cột trống tiếp theo để tạo mốc mới.
+  </li>
+  <li><strong>Tính năng "Link từ tờ chăm sóc":</strong>
+    <br>• Bấm nút <em>"Link từ tờ chăm sóc"</em> để mở danh sách các phiếu khám trong hồ sơ bệnh án điện tử, hỗ trợ tìm kiếm nhanh theo giờ, bác sĩ, thuốc và nạp tự động toàn bộ chỉ số vào form chỉ với 1 click.
+  </li>
+  <li><strong>Tính năng nạp nhanh từ mốc trước (Quick Load Previous Value):</strong>
+    <br>• Trang bị 4 biểu tượng lịch sử nhỏ (<i style="font-family: Arial;">⏱</i>) cạnh tiêu đề của 4 mục thường không đổi qua các lần khám: <strong>Đạm niệu</strong>, <strong>Keton niệu</strong>, <strong>Oxytocin</strong> và <strong>Thuốc đã dùng</strong>.
+    <br>• Bấm vào biểu tượng sẽ tự động nạp lại chính xác giá trị đã ghi nhận ở mốc khám liền kề trước đó.
+  </li>
+  <li><strong>Hành vi Lưu dữ liệu (Enter / Nút Lưu):</strong>
+    <br>• Nhấn phím <code>Enter</code> tại bất kỳ ô nào (trừ textarea) hoặc nhấn nút <code>Lưu</code> sẽ thực hiện lưu dữ liệu và vẽ lại biểu đồ ngay lập tức.
+    <br>• <strong>Form nhập liệu không bị đóng</strong> sau khi lưu, giúp nhân viên y tế có thể tiếp tục xem lại hoặc chỉnh sửa liên tục mà không phải mở lại form. Form chỉ đóng khi bấm nút <code>✕</code> hoặc nút <code>Hủy</code>.
+  </li>
+  <li><strong>Cảnh báo an toàn khoảng cách mốc:</strong>
+    <br>• Nếu thêm mốc mới có thời gian cách mốc gần nhất dưới 30 phút, hệ thống sẽ bật hộp thoại xác nhận nhắc nhở nhân viên y tế trước khi lưu.
+  </li>
+</ol>
+
+<div class="footer-note">
+Tài liệu được xuất tự động từ hệ thống Biểu đồ chuyển dạ Partograph điện tử • Tiêu chuẩn Bệnh viện Mỹ Đức Phú Nhuận
+</div>
+
+</body>
+</html>

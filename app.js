@@ -328,6 +328,11 @@ const el = {
   inputUrineAcetone: document.getElementById('inputUrineAcetone'),
   inputUrineVolume: document.getElementById('inputUrineVolume'),
 
+  btnCopyPrevUrineProtein: document.getElementById('btnCopyPrevUrineProtein'),
+  btnCopyPrevUrineAcetone: document.getElementById('btnCopyPrevUrineAcetone'),
+  btnCopyPrevOxytocin: document.getElementById('btnCopyPrevOxytocin'),
+  btnCopyPrevDrugs: document.getElementById('btnCopyPrevDrugs'),
+
   patientNameInput: document.getElementById('patientNameInput'),
   patientAgeInput: document.getElementById('patientAgeInput'),
   patientRecordInput: document.getElementById('patientRecordInput'),
@@ -423,6 +428,58 @@ function bindEvents() {
 
   if (el.inputBpSys) el.inputBpSys.addEventListener('input', checkLiveWarnings);
   if (el.inputBpDia) el.inputBpDia.addEventListener('input', checkLiveWarnings);
+
+  // Quick Copy Previous Value Actions
+  if (el.btnCopyPrevUrineProtein) {
+    el.btnCopyPrevUrineProtein.addEventListener('click', () => {
+      const prev = getPrecedingObservation();
+      if (prev && prev.urineProtein) {
+        el.inputUrineProtein.value = prev.urineProtein;
+        showToast(`Đã lấy Đạm niệu mốc trước (${prev.time || ''}): ${prev.urineProtein}`, 'info');
+      } else {
+        showToast('Chưa có dữ liệu Đạm niệu ở mốc trước đó', 'warning');
+      }
+    });
+  }
+
+  if (el.btnCopyPrevUrineAcetone) {
+    el.btnCopyPrevUrineAcetone.addEventListener('click', () => {
+      const prev = getPrecedingObservation();
+      if (prev && prev.urineAcetone) {
+        el.inputUrineAcetone.value = prev.urineAcetone;
+        showToast(`Đã lấy Keton niệu mốc trước (${prev.time || ''}): ${prev.urineAcetone}`, 'info');
+      } else {
+        showToast('Chưa có dữ liệu Keton niệu ở mốc trước đó', 'warning');
+      }
+    });
+  }
+
+  if (el.btnCopyPrevOxytocin) {
+    el.btnCopyPrevOxytocin.addEventListener('click', () => {
+      const prev = getPrecedingObservation();
+      if (prev && (prev.oxytocinVal !== undefined && prev.oxytocinVal !== '')) {
+        el.inputOxytocinVal.value = prev.oxytocinVal;
+        if (prev.oxytocinUnit && el.inputOxytocinUnit) {
+          el.inputOxytocinUnit.value = prev.oxytocinUnit;
+        }
+        showToast(`Đã lấy Oxytocin mốc trước (${prev.time || ''}): ${prev.oxytocinVal} ${prev.oxytocinUnit || ''}`, 'info');
+      } else {
+        showToast('Chưa có dữ liệu Oxytocin ở mốc trước đó', 'warning');
+      }
+    });
+  }
+
+  if (el.btnCopyPrevDrugs) {
+    el.btnCopyPrevDrugs.addEventListener('click', () => {
+      const prev = getPrecedingObservation();
+      if (prev && prev.drugs) {
+        el.inputDrugs.value = prev.drugs;
+        showToast(`Đã lấy Thuốc đã dùng mốc trước (${prev.time || ''}): ${prev.drugs}`, 'info');
+      } else {
+        showToast('Chưa có dữ liệu Thuốc ở mốc trước đó', 'warning');
+      }
+    });
+  }
 
   // Treatment Modal Events
   if (el.btnLoadTreatment) el.btnLoadTreatment.addEventListener('click', openTreatmentRecordsModal);
@@ -1743,6 +1800,21 @@ function applyTreatmentRecordToForm(record) {
 // ==============================================================
 // 9. UTILITY FUNCTIONS
 // ==============================================================
+
+function getPrecedingObservation() {
+  const editId = el.editObsId ? el.editObsId.value : '';
+  const currentObsDate = el.inputObsDate && el.inputObsDate.value ? el.inputObsDate.value : getTodayDateStr();
+  const currentObsTime = el.inputObsTime && el.inputObsTime.value ? el.inputObsTime.value : getCurrentTimeStr();
+  const currentMs = getObsDateTimeMs({ date: currentObsDate, time: currentObsTime });
+
+  const others = appData.observations
+    .filter(o => o.id !== editId)
+    .sort((a, b) => getObsDateTimeMs(a) - getObsDateTimeMs(b));
+
+  const earlier = others.filter(o => getObsDateTimeMs(o) < currentMs);
+  if (earlier.length > 0) return earlier[earlier.length - 1];
+  return others.length > 0 ? others[others.length - 1] : null;
+}
 
 function getTodayDateStr() {
   const d = new Date();

@@ -473,7 +473,12 @@
                       <input type="text" inputmode="numeric" id="inputUrineVolume" class="form-control font-mono" maxlength="4" placeholder="0 - 2000" autocomplete="off">
                     </div>
                     <div class="form-field">
-                      <label for="inputUrineProtein">Đạm niệu</label>
+                      <div class="label-with-action">
+                        <label for="inputUrineProtein">Đạm niệu</label>
+                        <button type="button" class="btn-copy-prev" id="btnCopyPrevUrineProtein" title="Lấy giá trị mốc trước">
+                          <i class="fa-solid fa-clock-rotate-left"></i>
+                        </button>
+                      </div>
                       <select id="inputUrineProtein" class="form-control">
                         <option value="">-- Chọn --</option>
                         <option value="-">-</option>
@@ -481,7 +486,12 @@
                       </select>
                     </div>
                     <div class="form-field">
-                      <label for="inputUrineAcetone">Keton niệu</label>
+                      <div class="label-with-action">
+                        <label for="inputUrineAcetone">Keton niệu</label>
+                        <button type="button" class="btn-copy-prev" id="btnCopyPrevUrineAcetone" title="Lấy giá trị mốc trước">
+                          <i class="fa-solid fa-clock-rotate-left"></i>
+                        </button>
+                      </div>
                       <select id="inputUrineAcetone" class="form-control">
                         <option value="">-- Chọn --</option>
                         <option value="-">-</option>
@@ -497,7 +507,12 @@
                 <div class="section-heading-blue">4. Sử dụng thuốc</div>
                 <div class="form-row-grid grid-2">
                   <div class="form-field">
-                    <label for="inputOxytocinVal">Oxytocin (chọn đơn vị)</label>
+                    <div class="label-with-action">
+                      <label for="inputOxytocinVal">Oxytocin (chọn đơn vị)</label>
+                      <button type="button" class="btn-copy-prev" id="btnCopyPrevOxytocin" title="Lấy giá trị mốc trước">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                      </button>
+                    </div>
                     <div class="input-group">
                       <input type="text" inputmode="decimal" id="inputOxytocinVal" class="form-control font-mono" maxlength="5"
                         placeholder="0 - 20.0 (VD: 3.45)">
@@ -508,7 +523,12 @@
                     </div>
                   </div>
                   <div class="form-field">
-                    <label for="inputDrugs">Thuốc đã dùng</label>
+                    <div class="label-with-action">
+                      <label for="inputDrugs">Thuốc đã dùng</label>
+                      <button type="button" class="btn-copy-prev" id="btnCopyPrevDrugs" title="Lấy giá trị mốc trước">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                      </button>
+                    </div>
                     <input type="text" id="inputDrugs" class="form-control" placeholder="Tên thuốc / dịch truyền...">
                   </div>
                 </div>
