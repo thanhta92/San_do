@@ -61,8 +61,19 @@ Toàn bộ các trường số được thiết lập chế độ **kiểm soát
 2. **Đường Hành Động (Action Line):**
    - Nằm song song và cách đường Báo Động 4 giờ ($240\text{px}$) về bên phải.
    - Đổi màu đỏ rực (`#dc2626`) khi đường mở CTC chạm hoặc vượt qua đường Hành Động (chỉ định can thiệp cấp cứu).
-3. **Độ mở cổ tử cung:** Ký hiệu `X`, nối đường liền màu đen.
-4. **Độ lọt ngôi thai:** Ký hiệu `O`, nối đường nét đứt màu đen.
+3. **Độ mở cổ tử cung (Ký hiệu X, nét liền đen):**
+   - Giá trị số nguyên ($10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0\text{ cm}$): Đánh **chính xác ngay trên đường kẻ line ngang** tương ứng với chỉ số đó.
+   - Giá trị số lẻ ($3.5, 4.5, 5.5, 6.5, 7.5, 8.5\text{ cm}$): Đánh **ở chính giữa khoảng cách giữa 2 đường kẻ ngang**.
+4. **Độ lọt ngôi thai (Ký hiệu O, nét đứt đen):**
+   - Gióng với các chỉ số $-3, -2, -1, 0, +1, +2, +3$.
+   - Luôn đánh **chính xác ngay trên đường kẻ line ngang** tương ứng:
+     - Mức $-3$: Đánh ngay trên line ngang **$5$** (`(-3) 5`)
+     - Mức $-2$: Đánh ngay trên line ngang **$4$** (`(-2) 4`)
+     - Mức $-1$: Đánh ngay trên line ngang **$3$** (`(-1) 3`)
+     - Mức $0$: Đánh ngay trên line ngang **$2$** (`(0) 2`)
+     - Mức $+1$: Đánh ngay trên line ngang **$1$** (`(+1) 1`)
+     - Mức $+2$: Đánh ngay trên line ngang **$0$** (`(+2) 0`)
+     - Mức $+3$: Đánh ngay trên line ngang **dưới cùng** (`(+3)`)
 5. **Nhịp tim thai (FHR):** Ký hiệu chấm tròn `●` kèm số, đổi màu đỏ khi bất thường.
 6. **Cơn co tử cung:** Chồng các khối từ 1 đến 6 theo thời lượng (sọc thưa, sọc caro, tô đặc).
 7. **Mạch & Huyết áp:** Mạch ký hiệu chấm tròn `●`; Huyết áp ký hiệu mũi tên `▲—▼` nối giữa 2 trị số.

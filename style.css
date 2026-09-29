@@ -691,12 +691,13 @@ body {
   height: calc(100% / 12);
   min-height: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  padding: 0 4px;
+  padding: 0 4px 1px 4px;
   font-size: 0.72rem;
   font-family: var(--font-mono);
   font-weight: 600;
+  line-height: 1;
   border-bottom: 1px solid #cbd5e1;
   box-sizing: border-box;
 }
@@ -990,7 +991,7 @@ body {
   background-color: #e0f2fe; /* Xanh dương nhẹ (light sky blue) */
 }
 
-/* Khi hover vào cột, toàn bộ giá trị chữ/số trong cột đó in đậm lên */
+/* Khi hover vào cột, toàn bộ giá trị chữ/số trong cột đó chuyển sang màu xanh blue tươi đậm */
 .time-col:hover .col-cell,
 .time-col:hover .cell-urine-sub,
 .time-col:hover .cell-time,
@@ -1001,17 +1002,40 @@ body {
 .time-col:hover .cell-molding,
 .time-col:hover .cell-temp,
 .time-col:hover .cell-nhs {
-  font-weight: 800 !important;
+  color: #0000ff !important;
 }
 
-/* SVG text and markers highlight on hover */
-.svg-hover-active {
-  font-weight: 800 !important;
-  stroke-width: 2.2px !important;
-}
+/* SVG text and markers highlight on hover: màu xanh blue tươi đậm */
 text.svg-hover-active {
-  font-weight: 800 !important;
-  font-size: 11px !important;
+  fill: #0000ff !important;
+}
+g.svg-marker.svg-hover-active line {
+  stroke: #0000ff !important;
+}
+circle.svg-marker.svg-hover-active {
+  stroke: #0000ff !important;
+}
+g.svg-bp-group.svg-hover-active line,
+g.svg-bp-group.svg-hover-active polygon {
+  stroke: #0000ff !important;
+  fill: #0000ff !important;
+}
+
+/* Dynamic cross-highlight on left headers on column hover */
+.header-highlight-active {
+  color: #0000ff !important;
+}
+
+.t-cervix.header-highlight-active,
+.t-descent.header-highlight-active,
+.cnt-tick.header-highlight-active,
+.cnt-leg-row.header-highlight-active {
+  color: #0000ff !important;
+}
+
+.cnt-leg-row.header-highlight-active .cnt-box {
+  border-color: #0000ff !important;
+  box-shadow: 0 0 0 1.5px #0000ff;
 }
 
 .time-col.time-col-disabled {

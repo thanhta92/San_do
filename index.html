@@ -13,7 +13,7 @@
     href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="style.css?v=2.3">
+  <link rel="stylesheet" href="style.css?v=3.1">
 </head>
 
 <body>
@@ -133,19 +133,19 @@
                 <div class="sec-header-col-mid">
                   <div class="cervix-title">Cổ tử cung<br>(đánh dấu X)</div>
                 </div>
-                <div class="sec-y-ticks-cervix">
-                  <div class="cervix-tick-row"><span class="t-descent"></span><span class="t-cervix">10</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent"></span><span class="t-cervix">9</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent"></span><span class="t-cervix">8</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent"></span><span class="t-cervix">7</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent"></span><span class="t-cervix">6</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent">(-3)</span><span class="t-cervix">5</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent">(-2)</span><span class="t-cervix">4</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent">(-1)</span><span class="t-cervix">3</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent">(0)</span><span class="t-cervix">2</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent">(+1)</span><span class="t-cervix">1</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent">(+2)</span><span class="t-cervix">0</span></div>
-                  <div class="cervix-tick-row"><span class="t-descent">(+3)</span><span class="t-cervix"></span></div>
+                <div class="sec-y-ticks-cervix" id="secYTicksCervix">
+                  <div class="cervix-tick-row"><span class="t-descent" data-station=""></span><span class="t-cervix" data-cm="10">10</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station=""></span><span class="t-cervix" data-cm="9">9</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station=""></span><span class="t-cervix" data-cm="8">8</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station=""></span><span class="t-cervix" data-cm="7">7</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station=""></span><span class="t-cervix" data-cm="6">6</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station="-3">(-3)</span><span class="t-cervix" data-cm="5">5</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station="-2">(-2)</span><span class="t-cervix" data-cm="4">4</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station="-1">(-1)</span><span class="t-cervix" data-cm="3">3</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station="0">(0)</span><span class="t-cervix" data-cm="2">2</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station="+1">(+1)</span><span class="t-cervix" data-cm="1">1</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station="+2">(+2)</span><span class="t-cervix" data-cm="0">0</span></div>
+                  <div class="cervix-tick-row"><span class="t-descent" data-station="+3">(+3)</span><span class="t-cervix" data-cm=""></span></div>
                 </div>
               </div>
 
@@ -159,18 +159,18 @@
                 <div class="sec-header-title">
                   <span>Số<br>cơn<br>co<br>trong<br>10<br>phút</span>
                 </div>
-                <div class="sec-contraction-legend">
-                  <div class="cnt-leg-row"><span class="cnt-box box-mild"></span> &lt; 20 (s)</div>
-                  <div class="cnt-leg-row"><span class="cnt-box box-mod"></span> 20-40 (s)</div>
-                  <div class="cnt-leg-row"><span class="cnt-box box-strong"></span> &gt; 40 (s)</div>
+                <div class="sec-contraction-legend" id="secContractionLegend">
+                  <div class="cnt-leg-row" data-dur="mild"><span class="cnt-box box-mild"></span> &lt; 20 (s)</div>
+                  <div class="cnt-leg-row" data-dur="moderate"><span class="cnt-box box-mod"></span> 20-40 (s)</div>
+                  <div class="cnt-leg-row" data-dur="strong"><span class="cnt-box box-strong"></span> &gt; 40 (s)</div>
                 </div>
-                <div class="sec-y-ticks-cnt">
-                  <div class="cnt-tick">6</div>
-                  <div class="cnt-tick">5</div>
-                  <div class="cnt-tick">4</div>
-                  <div class="cnt-tick">3</div>
-                  <div class="cnt-tick">2</div>
-                  <div class="cnt-tick">1</div>
+                <div class="sec-y-ticks-cnt" id="secYTicksCnt">
+                  <div class="cnt-tick" data-cnt="6">6</div>
+                  <div class="cnt-tick" data-cnt="5">5</div>
+                  <div class="cnt-tick" data-cnt="4">4</div>
+                  <div class="cnt-tick" data-cnt="3">3</div>
+                  <div class="cnt-tick" data-cnt="2">2</div>
+                  <div class="cnt-tick" data-cnt="1">1</div>
                 </div>
               </div>
 
@@ -585,7 +585,7 @@
   <div class="matrix-tooltip" id="matrixTooltip"></div>
   <div class="app-toast-box" id="appToastBox"></div>
 
-  <script src="app.js?v=2.3"></script>
+  <script src="app.js?v=3.0"></script>
 </body>
 
 </html>

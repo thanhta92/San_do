@@ -117,7 +117,7 @@ const PRESETS = {
       },
       {
         id: "obs-4", date: "22/09/2026", time: "12:30", minutesFromStart: 210, laborHour: 3.5,
-        dilation: 8.5, descent: 1, liquor: "TT", molding: "+", position: "CV",
+        dilation: 9.0, descent: 1, liquor: "TT", molding: "+", position: "CV",
         fhr: 144, cntCount: 4, cntDur: "strong", oxytocinVal: "12", oxytocinUnit: "giọt/phút",
         drugs: "Duy trì Oxytocin 12 giọt/phút", pulse: 90, bpSys: 120, bpDia: 80, temp: 37.1,
         urineProtein: "-", urineAcetone: "-", urineVolume: 100, examiner: "BS. TRẦN VĂN AN",
@@ -969,6 +969,77 @@ function renderDynamicColumns() {
   container.appendChild(frag);
 }
 
+function highlightHeaderMetrics(obs) {
+  clearHeaderMetrics();
+  if (!obs) return;
+
+  // 1. Cổ tử cung (Cervix Dilation cm)
+  if (obs.dilation !== null && obs.dilation !== undefined && obs.dilation !== '') {
+    const cm = parseFloat(obs.dilation);
+    if (!isNaN(cm)) {
+      const floorCm = Math.floor(cm);
+      const ceilCm = Math.ceil(cm);
+      document.querySelectorAll('#secYTicksCervix .t-cervix').forEach(el => {
+        const val = parseInt(el.getAttribute('data-cm') || el.textContent.trim(), 10);
+        if (!isNaN(val) && (val === floorCm || val === ceilCm)) {
+          el.classList.add('header-highlight-active');
+        }
+      });
+    }
+  }
+
+  // 2. Độ lọt ngôi thai (Head Descent / Station)
+  if (obs.descent !== null && obs.descent !== undefined && obs.descent !== '') {
+    let raw = obs.descent;
+    let stationNorm = null;
+    let num = typeof raw === 'number' ? raw : parseInt(raw, 10);
+    if (!isNaN(num)) {
+      if (num <= -1) stationNorm = `${num}`;
+      else if (num === 0) stationNorm = '0';
+      else if (num >= 1 && num <= 3) stationNorm = `+${num}`;
+      else if (num === 4) stationNorm = '-2';
+      else if (num === 5) stationNorm = '-3';
+    }
+    if (stationNorm !== null) {
+      document.querySelectorAll('#secYTicksCervix .t-descent').forEach(el => {
+        const attr = el.getAttribute('data-station');
+        const txt = el.textContent.replace(/[()]/g, '').trim();
+        if (attr === stationNorm || txt === stationNorm || (stationNorm === '0' && (txt === '0' || attr === '0'))) {
+          el.classList.add('header-highlight-active');
+        }
+      });
+    }
+  }
+
+  // 3. Số cơn co trong 10 phút (Contraction count 1-6)
+  if (obs.cntCount !== null && obs.cntCount !== undefined && obs.cntCount !== '') {
+    const count = parseInt(obs.cntCount, 10);
+    if (!isNaN(count) && count >= 1 && count <= 6) {
+      document.querySelectorAll('#secYTicksCnt .cnt-tick').forEach(el => {
+        const c = parseInt(el.getAttribute('data-cnt') || el.textContent.trim(), 10);
+        if (c === count) {
+          el.classList.add('header-highlight-active');
+        }
+      });
+    }
+  }
+
+  // 4. Thời gian co (Contraction duration <20s, 20-40s, >40s)
+  if (obs.cntDur) {
+    const dur = String(obs.cntDur).trim().toLowerCase();
+    document.querySelectorAll('#secContractionLegend .cnt-leg-row').forEach(el => {
+      const d = el.getAttribute('data-dur');
+      if (d === dur || (dur === '<20' && d === 'mild') || (dur === '20-40' && d === 'moderate') || (dur === '>40' && d === 'strong')) {
+        el.classList.add('header-highlight-active');
+      }
+    });
+  }
+}
+
+function clearHeaderMetrics() {
+  document.querySelectorAll('.header-highlight-active').forEach(el => el.classList.remove('header-highlight-active'));
+}
+
 function createColumnElement(obs, index, width) {
   const col = document.createElement('div');
   col.className = 'time-col';
@@ -979,9 +1050,11 @@ function createColumnElement(obs, index, width) {
 
   col.addEventListener('mouseenter', () => {
     document.querySelectorAll(`.svg-col-${index}`).forEach(elem => elem.classList.add('svg-hover-active'));
+    highlightHeaderMetrics(obs);
   });
   col.addEventListener('mouseleave', () => {
     document.querySelectorAll(`.svg-col-${index}`).forEach(elem => elem.classList.remove('svg-hover-active'));
+    clearHeaderMetrics();
   });
   col.addEventListener('click', () => openModalForEdit(index));
 
@@ -1177,7 +1250,7 @@ function renderSvgOverlay() {
     colCoords.push({ index: idx, x: col.offsetLeft, centerX: col.offsetLeft + w / 2, width: w });
   });
 
-  const getCervixY = (cm) => topCervix + (10 - Math.max(0, Math.min(10, cm))) * 20 + 10;
+  const getCervixY = (cm) => topCervix + (10 - Math.max(0, Math.min(10, cm)) + 1) * 20;
   const getDescentY = (val) => {
     let level = 5;
     if (typeof val === 'string') val = parseInt(val, 10);
@@ -1192,7 +1265,7 @@ function renderSvgOverlay() {
         level = val;
       }
     }
-    return topCervix + (10 - level) * 20 + 10;
+    return topCervix + (10 - level + 1) * 20;
   };
   const getFHRY = (fhr) => topFHR + (heightFHR - 12) - ((Math.max(100, Math.min(180, fhr)) - 100) / 80) * (heightFHR - 30);
   const getPulseY = (pulse) => topPulse + heightPulse - 12 - ((Math.max(50, Math.min(140, pulse)) - 50) / 90) * (heightPulse - 24);
