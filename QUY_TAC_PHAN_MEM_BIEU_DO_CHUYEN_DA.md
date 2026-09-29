@@ -24,7 +24,7 @@ Biểu đồ chuyển dạ (Partograph) là công cụ theo dõi động tiến 
 6. **Số cột tối thiểu:** Hiển thị ít nhất 10 cột chuẩn (600px) bao quát trọn vẹn đường Báo Động và Hành Động.
 
 ### 2.2. Cơ chế tự động mở rộng chiều cao hàng văn bản đa dòng (Dynamic Row-Height)
-Hệ thống tự động đo lường `scrollHeight` và `offsetHeight` thực tế của 3 hàng chứa nội dung dài (*Thuốc đã dùng*, *Ghi nhận lâm sàng*, *NHS thực hiện*) trên toàn bộ các cột và tự động đồng bộ chiều cao hàng (thông qua biến CSS `--h-drugs`, `--h-clinical`, `--h-nhs`) để hiển thị trọn vẹn 100% nội dung chữ, không bị che khuất hay cắt xén.
+Hệ thống tự động đo lường `scrollHeight` và `offsetHeight` thực tế của 3 hàng chứa nội dung dài (*Thuốc đã dùng*, *Ghi chú lâm sàng*, *NHS thực hiện*) trên toàn bộ các cột và tự động đồng bộ chiều cao hàng (thông qua biến CSS `--h-drugs`, `--h-clinical`, `--h-nhs`) để hiển thị trọn vẹn 100% nội dung chữ, không bị che khuất hay cắt xén.
 
 ---
 

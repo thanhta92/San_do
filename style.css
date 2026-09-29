@@ -43,7 +43,7 @@
   --h-fhr: 70px;          /* Thu gọn chiều cao phần Tim thai */
   --h-liquor: 26px;
   --h-molding: 26px;
-  --h-cervix: 140px;       /* 7 ticks * 20px (4 - 10 cm) */
+  --h-cervix: 240px;       /* 12 ticks * 20px (0 - 10 cm + row +3) */
   --h-hour: 24px;
   --h-time: 26px;
   --h-cnt: 120px;          /* 6 ticks * 20px */
@@ -53,7 +53,7 @@
   --h-bp: 64px;            /* Huyết áp riêng ở dưới (tự động co giãn) */
   --h-temp: 26px;
   --h-urine: 66px;         /* 3 subrows * 22px */
-  --h-clinical: 46px;      /* Ghi nhận lâm sàng */
+  --h-clinical: 46px;      /* Ghi chú lâm sàng */
   --h-nhs: 38px;
 
   --font-sans: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -687,7 +687,9 @@ body {
 }
 
 .cervix-tick-row {
-  height: 20px;
+  flex: 1 1 0;
+  height: calc(100% / 12);
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -696,6 +698,7 @@ body {
   font-family: var(--font-mono);
   font-weight: 600;
   border-bottom: 1px solid #cbd5e1;
+  box-sizing: border-box;
 }
 
 .cervix-tick-row:last-child {
@@ -710,6 +713,7 @@ body {
 .cervix-tick-row .t-cervix {
   color: #000000;
   font-weight: bold;
+  margin-left: auto;
 }
 
 /* 5 & 6. Giờ & Thời gian */
@@ -786,7 +790,9 @@ body {
 }
 
 .cnt-tick {
-  height: 20px;
+  flex: 1 1 0;
+  height: calc(100% / 6);
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -794,6 +800,7 @@ body {
   font-family: var(--font-mono);
   font-weight: bold;
   border-bottom: 1px solid #cbd5e1;
+  box-sizing: border-box;
 }
 
 .cnt-tick:last-child {
@@ -925,7 +932,7 @@ body {
   border-bottom: none;
 }
 
-/* 14. Ghi nhận lâm sàng */
+/* 14. Ghi chú lâm sàng */
 .sec-clinical {
   height: var(--h-clinical);
   min-height: var(--h-clinical);
@@ -1045,7 +1052,25 @@ text.svg-hover-active {
 .col-cell.cell-fhr { height: var(--h-fhr); }
 .col-cell.cell-liquor { height: var(--h-liquor); font-weight: normal; }
 .col-cell.cell-molding { height: var(--h-molding); font-weight: normal; }
-.col-cell.cell-cervix { height: var(--h-cervix); }
+.col-cell.cell-cervix { 
+  height: var(--h-cervix); 
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: visible;
+}
+.cervix-subrow {
+  width: 100%;
+  flex: 1 1 0;
+  height: calc(100% / 12);
+  min-height: 0;
+  border-bottom: 1px solid #cbd5e1;
+  box-sizing: border-box;
+}
+.cervix-subrow:last-child {
+  border-bottom: none;
+}
+
 .col-cell.cell-time { 
   height: var(--h-time); 
   font-family: var(--font-mono); 
@@ -1061,8 +1086,21 @@ text.svg-hover-active {
 }
 .col-cell.cell-cnt { 
   height: var(--h-cnt); 
-  align-items: flex-end; 
-  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+.cnt-subrow {
+  width: 100%;
+  flex: 1 1 0;
+  height: calc(100% / 6);
+  min-height: 0;
+  border-bottom: 1px solid #cbd5e1;
+  box-sizing: border-box;
+}
+.cnt-subrow:last-child {
+  border-bottom: none;
 }
 .col-cell.cell-oxy { 
   height: var(--h-oxy); 
@@ -1190,7 +1228,9 @@ text.svg-hover-active {
   margin: 0;
   display: flex;
   flex-direction: column-reverse;
-  position: relative;
+  position: absolute;
+  left: 0;
+  bottom: 0;
   z-index: 2;
 }
 

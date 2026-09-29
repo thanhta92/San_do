@@ -14,7 +14,7 @@ const CONFIG = {
   defaultColWidth: 60,     // 1 ô chuẩn 60 phút = 60px
   defaultCols: 10,         // 10 cột = 600px
   fhrHeight: 70,           // Chiều cao phần Tim thai
-  cervixTickHeight: 20,    // 20px mỗi cm (7 nấc từ 4 đến 10)
+  cervixTickHeight: 20,    // 20px mỗi cm (12 nấc: 0-10 cm + vạch +3)
   vitalsTickHeight: 14,
   cntTickHeight: 20,       // 20px mỗi cơn co (6 nấc từ 1 đến 6)
   currentUser: "NHS. LÊ THỊ HỒNG"
@@ -1005,11 +1005,10 @@ function createColumnElement(obs, index, width) {
 
   // Row 4: Cervix subgrid
   const cellCervix = createCell('col-cell cell-cervix');
-  for (let i = 0; i < 7; i++) {
-    const line = document.createElement('div');
-    line.className = 'subgrid-line-cervix';
-    line.style.top = `${i * CONFIG.cervixTickHeight}px`;
-    cellCervix.appendChild(line);
+  for (let i = 0; i < 12; i++) {
+    const sub = document.createElement('div');
+    sub.className = 'cervix-subrow';
+    cellCervix.appendChild(sub);
   }
   col.appendChild(cellCervix);
 
@@ -1019,10 +1018,9 @@ function createColumnElement(obs, index, width) {
   // Row 7: Contractions
   const cellCnt = createCell('col-cell cell-cnt');
   for (let i = 0; i < 6; i++) {
-    const line = document.createElement('div');
-    line.className = 'subgrid-line-cnt';
-    line.style.top = `${i * CONFIG.cntTickHeight}px`;
-    cellCnt.appendChild(line);
+    const sub = document.createElement('div');
+    sub.className = 'cnt-subrow';
+    cellCnt.appendChild(sub);
   }
   if (obs.cntCount && obs.cntCount > 0) {
     const stack = document.createElement('div');
@@ -1101,7 +1099,7 @@ function createEmptyColumnElement(index, width, minutesFromStart, isNextEmpty = 
 
   const rows = [
     { cls: 'cell-fhr' }, { cls: 'cell-liquor' }, { cls: 'cell-molding' },
-    { cls: 'cell-cervix', h: CONFIG.cervixTickHeight, count: 7 },
+    { cls: 'cell-cervix', h: CONFIG.cervixTickHeight, count: 12 },
     { cls: 'cell-time' }, { cls: 'cell-cnt', h: CONFIG.cntTickHeight, count: 6 },
     { cls: 'cell-oxy' }, { cls: 'cell-drugs' }, { cls: 'cell-pulse' },
     { cls: 'cell-bp' }, { cls: 'cell-temp' }, { cls: 'cell-urine', sub: 3 },
@@ -1110,7 +1108,19 @@ function createEmptyColumnElement(index, width, minutesFromStart, isNextEmpty = 
 
   rows.forEach(r => {
     const c = createCell(`col-cell ${r.cls}`);
-    if (r.count) {
+    if (r.cls === 'cell-cervix') {
+      for (let i = 0; i < 12; i++) {
+        const sub = document.createElement('div');
+        sub.className = 'cervix-subrow';
+        c.appendChild(sub);
+      }
+    } else if (r.cls === 'cell-cnt') {
+      for (let i = 0; i < 6; i++) {
+        const sub = document.createElement('div');
+        sub.className = 'cnt-subrow';
+        c.appendChild(sub);
+      }
+    } else if (r.count) {
       for (let i = 0; i < r.count; i++) {
         const line = document.createElement('div');
         line.style.cssText = `position:absolute;left:0;right:0;top:${i * r.h}px;border-bottom:1px solid #cbd5e1;`;
@@ -1156,7 +1166,7 @@ function renderSvgOverlay() {
   const topFHR = fhrEl ? fhrEl.offsetTop : 0;
   const heightFHR = fhrEl ? fhrEl.offsetHeight : 70;
   const topCervix = cervixEl ? cervixEl.offsetTop : 122;
-  const topPulse = pulseEl ? pulseEl.offsetTop : (topCervix + 140 + 26 + 120 + 34 + 40);
+  const topPulse = pulseEl ? pulseEl.offsetTop : (topCervix + 240 + 26 + 120 + 34 + 40);
   const heightPulse = pulseEl ? pulseEl.offsetHeight : 80;
   const topBP = bpEl ? bpEl.offsetTop : (topPulse + heightPulse);
   const heightBP = bpEl ? bpEl.offsetHeight : 100;
@@ -1167,12 +1177,22 @@ function renderSvgOverlay() {
     colCoords.push({ index: idx, x: col.offsetLeft, centerX: col.offsetLeft + w / 2, width: w });
   });
 
-  const getCervixY = (cm) => topCervix + (10 - Math.max(4, Math.min(10, cm))) * 20 + 10;
+  const getCervixY = (cm) => topCervix + (10 - Math.max(0, Math.min(10, cm))) * 20 + 10;
   const getDescentY = (val) => {
-    let s = 0;
-    if (typeof val === 'number') s = (val === 4 ? -2 : val === 5 ? -3 : val);
-    else if (typeof val === 'string') s = parseInt(val, 10) || 0;
-    return topCervix + (Math.max(-3, Math.min(3, s)) + 3) * 20 + 10;
+    let level = 5;
+    if (typeof val === 'string') val = parseInt(val, 10);
+    if (typeof val === 'number' && !isNaN(val)) {
+      if (val <= -1) {
+        level = Math.min(5, Math.max(-1, 2 - val));
+      } else if (val === 0) {
+        level = 2;
+      } else if (val >= 1 && val <= 3) {
+        level = 2 - val;
+      } else if (val === 4 || val === 5) {
+        level = val;
+      }
+    }
+    return topCervix + (10 - level) * 20 + 10;
   };
   const getFHRY = (fhr) => topFHR + (heightFHR - 12) - ((Math.max(100, Math.min(180, fhr)) - 100) / 80) * (heightFHR - 30);
   const getPulseY = (pulse) => topPulse + heightPulse - 12 - ((Math.max(50, Math.min(140, pulse)) - 50) / 90) * (heightPulse - 24);
@@ -1898,7 +1918,7 @@ function formatDilation(str) {
 
   if (isNaN(val)) return '';
   val = Math.round(val * 2) / 2;
-  return Math.min(10.5, Math.max(4.0, val)).toFixed(1);
+  return Math.min(10.5, Math.max(0.0, val)).toFixed(1);
 }
 
 function formatBp(str) {
